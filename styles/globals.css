@@ -29,3 +29,8 @@ a {
   height: 250px;
   border-radius: 50%;
 }
+
+.centertexts {
+  width: 100%;
+  text-align: center;
+}
