@@ -31,7 +31,7 @@ function HomePage() {
         <h2>New Orleans, Louisiana, USA - Remote</h2>
         <br />
         <h1>Education</h1>
-        <h2>M.S. Predictive Analytics, Norwestern University</h2>
+        <h2>M.S. Predictive Analytics, Northwestern University</h2>
         <br />
         <h1>Current</h1>
         <h2>Title: Staff Engineer, Analytics</h2>
