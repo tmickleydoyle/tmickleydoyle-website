@@ -1,50 +1,53 @@
-import Image from 'next/image'
+import Image from 'next/image';
+import Link from 'next/link'
+
+import data from "../data/config.json";
 
 function HomePage() {
-  return<div className="maincontainer">
-      <style jsx>{`
-        .maincontainer {
-          margin: 100px;
-        }
-        .greytext {
-          color: #808080;
-        }
-      `}</style>
-      <div style={{borderRadius: '50%', overflow: 'hidden', width: '250px', height: '250px' }}>
-        <Image 
-          src="/static/images/profile_image.png" 
-          width={250}
-          height={250} 
-          alt="Profile Image" />
+  return(
+    <>
+      <div className="maincontainer">
+        <div className='photoborder'>
+          <Image 
+            src={data.profile_photo}
+            width={250}
+            height={250} 
+            alt="Profile Image" />
+        </div>
+        <br />
+        <h1>{data.name}</h1>
+        <div className="greytext">
+          {data.custom_links && data.custom_links.length > 0 && data.custom_links.map((link, index) => (
+            <div key={index}>
+              {/* <h3>{link.name}: {link.url}</h3> */}
+              <Link href={link.url}>{link.name}</Link>
+            </div>
+          ))}
+        </div>
+        <hr width="40%" color="grey" size="2px" align="left" />
+        <div className="greytext">
+          <h1>Location</h1>
+          <h2>{data.location}</h2>
+          <br />
+          <h1>Education</h1>
+          <h2>{data.education}</h2>
+          <br />
+          <h1>Current</h1>
+          <h2>Title: {data.current_role}</h2>
+          <h2>Company: {data.current_company}</h2>
+          <br />
+          <h1>Previous</h1>
+          {data.previous_roles && data.previous_roles.length > 0 && data.previous_roles.map((job, index) => (
+            <div key={index}>
+              <h2>Title: {job.role}</h2>
+              <h2>Company: {job.company}</h2>
+              <br />
+            </div>
+          ))}
+        </div>
       </div>
-      <br />
-      <h1>Thomas Mickley-Doyle</h1>
-      <br />
-      <hr  style={{
-        color: '#808080',
-        backgroundColor: '#808080',
-        height: .5,
-        borderColor : '#808080'
-      }}/>
-      <div className="greytext">
-        <h1>Location</h1>
-        <h2>New Orleans, Louisiana, USA - Remote</h2>
-        <br />
-        <h1>Education</h1>
-        <h2>M.S. Predictive Analytics, Northwestern University</h2>
-        <br />
-        <h1>Current</h1>
-        <h2>Title: Staff Engineer, Analytics</h2>
-        <h2>Company: ▲ Vercel</h2>
-        <br />
-        <h1>Previous</h1>
-        <h2>Title: Senior Software Engineer, Data</h2>
-        <h2>Company: GitHub</h2>
-        <br />
-        <h2>Title: Data Scientist, Engineering</h2>
-        <h2>Company: Lucid</h2>
-      </div>
-    </div>
+    </>
+  )
 }
 
 export default HomePage

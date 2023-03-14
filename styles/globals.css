@@ -14,3 +14,18 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.maincontainer {
+  margin: 5%;
+}
+
+.greytext {
+  color: #808080;
+}
+
+.photoborder {
+  overflow: hidden;
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+}
