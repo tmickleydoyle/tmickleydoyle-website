@@ -29,14 +29,22 @@ const Profile = () => {
           <h1>Location</h1>
           <h2>{data.location}</h2>
           <br />
-          <h1>Education</h1>
-          <h2>{data.education}</h2>
+          {data.education && data.education.length > 0 && (
+            <h1>Education</h1>
+          )}
+          {data.education && data.education.length > 0 && data.education.map((edu, index) => (
+            <div key={index}>
+              <h2>{edu.degree}, {edu.school}</h2>
+            </div>
+          ))}
           <br />
           <h1>Current</h1>
           <h2>Title: {data.current_role}</h2>
           <h2>Company: {data.current_company}</h2>
           <br />
-          <h1>Previous</h1>
+          {data.previous_roles && data.previous_roles.length > 0 && (
+            <h1>Previous</h1>
+          )}
           {data.previous_roles && data.previous_roles.length > 0 && data.previous_roles.map((job, index) => (
             <div key={index}>
               <h2>Title: {job.role}</h2>

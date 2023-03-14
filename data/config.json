@@ -2,7 +2,16 @@
     "name": "Thomas Mickley-Doyle",
     "profile_photo": "/static/images/profile_image.png",
     "location": "New Orleans, Louisiana, USA - Remote",
-    "education": "M.S. Predictive Analytics, Northwestern University",
+    "education": [
+        {
+            "degree": "M.S. Predictive Analytics",
+            "school": "Northwestern University"
+        },
+        {
+            "degree": "B.A. Sociology",
+            "school": "Le Moyne College"
+        }
+    ],
     "current_role": "Staff Engineer, Analytics",
     "current_company": "▲ Vercel",
     "previous_roles": [
