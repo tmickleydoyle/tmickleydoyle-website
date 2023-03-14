@@ -17,13 +17,13 @@ function HomePage() {
         <br />
         <h1>{data.name}</h1>
         <div className="greytext">
-          {data.custom_links && data.custom_links.length > 0 && data.custom_links.map((link, index) => (
+          {data.custom_contact_links && data.custom_contact_links.length > 0 && data.custom_contact_links.map((link, index) => (
             <div key={index}>
-              {/* <h3>{link.name}: {link.url}</h3> */}
               <Link href={link.url}>{link.name}</Link>
             </div>
           ))}
         </div>
+        <br />
         <hr width="40%" color="grey" size="2px" align="left" />
         <div className="greytext">
           <h1>Location</h1>
