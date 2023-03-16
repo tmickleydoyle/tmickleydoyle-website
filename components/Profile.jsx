@@ -29,7 +29,7 @@ const Profile = () => {
         <div className="greytext">
           <a>&nbsp;</a>
           {data.custom_contact_links && data.custom_contact_links.length > 0 && data.custom_contact_links.map((link, index) => (
-              <a><Link key={link.name} href={link.url}>{link.name}</Link> {index !== data.custom_contact_links.length - 1 && ' | '} </a>
+              <a key={link.name}><Link href={link.url}>{link.name}</Link> {index !== data.custom_contact_links.length - 1 && ' | '} </a>
           ))}
         </div>
         <br />
