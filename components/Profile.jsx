@@ -1,9 +1,19 @@
 import Image from 'next/image';
 import Link from 'next/link'
 
+import { useState } from 'react';
+
 import data from "../data/config.json";
+import Contributions from './Contributions';
+import Resume from './Resume';
 
 const Profile = () => {
+  const [tab, setTab] = useState('profile');
+
+  const handleClick = (param) => {
+    setTab(param);
+  }
+
   return(
     <>
       <div className="maincontainer">
@@ -17,42 +27,26 @@ const Profile = () => {
         <br />
         <h1>{data.name}</h1>
         <div className="greytext">
+          <a>&nbsp;</a>
           {data.custom_contact_links && data.custom_contact_links.length > 0 && data.custom_contact_links.map((link, index) => (
-            <div key={index}>
-              <Link href={link.url}>{link.name}</Link>
-            </div>
+              <a><Link href={link.url}>{link.name}</Link> {index !== data.custom_contact_links.length - 1 && ' | '} </a>
           ))}
         </div>
         <br />
         <hr width="40%" color="grey" size="2px" align="left" />
-        <div className="greytext">
-          <h1>Location</h1>
-          <h2>{data.location}</h2>
-          <br />
-          {data.education && data.education.length > 0 && (
-            <h1>Education</h1>
-          )}
-          {data.education && data.education.length > 0 && data.education.map((edu, index) => (
-            <div key={index}>
-              <h2>{edu.degree}, {edu.school}</h2>
-            </div>
-          ))}
-          <br />
-          <h1>Current</h1>
-          <h2>Title: {data.current_role}</h2>
-          <h2>Company: {data.current_company}</h2>
-          <br />
-          {data.previous_roles && data.previous_roles.length > 0 && (
-            <h1>Previous</h1>
-          )}
-          {data.previous_roles && data.previous_roles.length > 0 && data.previous_roles.map((job, index) => (
-            <div key={index}>
-              <h2>Title: {job.role}</h2>
-              <h2>Company: {job.company}</h2>
-              <br />
-            </div>
-          ))}
-        </div>
+        <br />
+        <button className='customButton' onClick={() => handleClick("profile")}>Profile</button>
+        <a>|</a>
+        <button className='customButton' onClick={() => handleClick("commits")}>GitHub Contributions Bar Chart</button>
+        <br />
+        {tab === 'profile' && (
+          <Resume />
+        )}
+        {tab === 'commits' && (
+          <div>
+            <Contributions />
+          </div>
+        )}
       </div>
     </>
   )

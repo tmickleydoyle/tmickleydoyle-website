@@ -43,3 +43,10 @@ a {
   right:0;
   background: none no-repeat scroll 0 0 #fff;
 }
+
+.customButton {
+  border: none;
+  background-color: transparent;
+  font-size: 16px;
+  color: #808080;
+}
