@@ -4,14 +4,14 @@ const query = `
     query ($username: String!) {
         user(login: $username) {
             contributionsCollection {
-            contributionCalendar {
-                weeks {
-                contributionDays {
-                    date
-                    contributionCount
+                contributionCalendar {
+                    weeks {
+                        contributionDays {
+                            date
+                            contributionCount
+                        }
+                    }
                 }
-                }
-            }
             }
         }
     }
