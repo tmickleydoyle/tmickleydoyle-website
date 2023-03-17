@@ -5,10 +5,10 @@ import { Chart as ChartJS } from "chart.js/auto";
 
 import { useState, useEffect } from 'react';
 
-const Contributions = () => {
+const Stars = () => {
     const [labels, setLabels] = useState([]);
     const [values, setValues] = useState([]);
-    const [showContrChart, setShowContrChart] = useState(false);
+    const [showStartChart, setShowStartChart] = useState(false);
     const options = {
         indexAxis: "y",
         plugins: {
@@ -20,7 +20,7 @@ const Contributions = () => {
                     pointStyle: "circle",
                 },
                 title: {
-                    text: "Contributions to Personal GitHub Repositories by Day",
+                    text: "Stars GitHub",
                     display: true,
                     color: "#000",
                     font: {
@@ -56,24 +56,21 @@ const Contributions = () => {
     }
 
     useEffect(() => {
-        async function fetchContrs() {
-            const res = await fetch('/api/github_contributions');
+        async function fetchStars() {
+            const res = await fetch('/api/github_stars');
             const data = await res.json();
 
-            for (let i = 0; i < data.data.user.contributionsCollection.contributionCalendar.weeks.length; i++) {
-                for (let j = 0; j < data.data.user.contributionsCollection.contributionCalendar.weeks[i].contributionDays.length; j++) {
-                    if (data.data.user.contributionsCollection.contributionCalendar.weeks[i].contributionDays[j].contributionCount > 0) {
-                        setValues(values => [...values, data.data.user.contributionsCollection.contributionCalendar.weeks[i].contributionDays[j].contributionCount]);
-                        setLabels(labels => [...labels, data.data.user.contributionsCollection.contributionCalendar.weeks[i].contributionDays[j].date]);
-                    }
-                }
+            for (let i = 0; i < data.length; i++) {
+                setValues(values => [...values, data[i].stars]);
+                setLabels(labels => [...labels, data[i].name]);
             }
-            setShowContrChart(true);
+
+            setShowStartChart(true);
         }
-        fetchContrs();
+        fetchStars();
     }, []);
 
-    if (showContrChart === false) {
+    if (showStartChart === false) {
         return (
             <div className='greytext'>
                 <br />
@@ -91,7 +88,7 @@ const Contributions = () => {
                         "labels": [...labels].reverse(),
                         "datasets": [
                             {
-                                "label": "Number of Contributions",
+                                "label": "Number of Stars",
                                 "data": [...values].reverse(),
                                 "backgroundColor": [
                                     'rgba(169,169,169)'
@@ -118,4 +115,4 @@ const Contributions = () => {
     )
 }
 
-export default Contributions;
+export default Stars;

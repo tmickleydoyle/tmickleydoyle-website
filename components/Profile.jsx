@@ -6,6 +6,7 @@ import { useState } from 'react';
 import data from "../data/config.json";
 import Contributions from './Contributions';
 import Resume from './Resume';
+import Stars from './Stars';
 
 const Profile = () => {
   const [tab, setTab] = useState('profile');
@@ -37,7 +38,9 @@ const Profile = () => {
         <br />
         <button className='customButton' onClick={() => handleClick("profile")}>Profile</button>
         <a>|</a>
-        <button className='customButton' onClick={() => handleClick("commits")}>GitHub Contributions Bar Chart</button>
+        <button className='customButton' onClick={() => handleClick("commits")}>GitHub Commits</button>
+        <a>|</a>
+        <button className='customButton' onClick={() => handleClick("stars")}>GitHub Stars</button>
         <br />
         {tab === 'profile' && (
           <Resume />
@@ -45,6 +48,11 @@ const Profile = () => {
         {tab === 'commits' && (
           <div>
             <Contributions />
+          </div>
+        )}
+        {tab === 'stars' && (
+          <div>
+            <Stars />
           </div>
         )}
       </div>
