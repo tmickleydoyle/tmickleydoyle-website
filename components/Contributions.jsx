@@ -88,11 +88,11 @@ const Contributions = () => {
             <Bar
                 data={
                     {
-                        "labels": labels,
+                        "labels": [...labels].reverse(),
                         "datasets": [
                             {
                                 "label": "Commits",
-                                "data": values,
+                                "data": [...values].reverse(),
                                 "backgroundColor": [
                                     'rgba(169,169,169)'
                                 ]
