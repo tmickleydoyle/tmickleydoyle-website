@@ -4,15 +4,18 @@ import React, { Component } from "react";
 class Footer extends Component {
   render() {
     return (
+      <>
+      <br />
       <footer>
           <div className="centertexts footer">
               <br />
               <div>
-              <span role="img" aria-label="star emoji">&#x2B50;&#xFE0F;</span> and <span role="img" aria-label="fork emoji">&#x1F374;</span> project on <a href="https://github.com/tmickleydoyle/hello-nextjs">GitHub</a>
+              <a href="https://github.com/tmickleydoyle/tmickleydoyle-website"><span role="img" aria-label="link emoji">🔗</span> to code on GitHub</a>
               </div>
               <br />
           </div>
         </footer>
+      </>
     );
   }
 }
