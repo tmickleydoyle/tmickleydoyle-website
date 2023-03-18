@@ -54,9 +54,7 @@ async function handleSubmit(event) {
 
   const inputData = data.trim().split(',').map(Number);
   const inputIndexes = Array.from(inputData, (_, i) => i);
-
   const reg = linearRegression(inputData, inputIndexes);
-
   const yValues = inputData.map((_, i) => parseFloat(reg.slope * i + reg.intercept));
 
   setYValues(yValues);
