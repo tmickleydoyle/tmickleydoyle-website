@@ -15,16 +15,29 @@ const LineGraph = ({ title, labels, data, forecast }) => {
 
     const options = {
         scales: {
-            xAxes: [{
+            y: {
+                beginAtZero: true,
+                grid: {
+                    display: true,
+                    drawBorder: false,
+                    drawOnChartArea: false,
+                },
                 ticks: {
-                    display: true
-                }
-            }],
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true,
-                }
-            }]
+                    font: {
+                    size: 14,
+                    },
+                },
+            },
+            x: {
+            grid: {
+                display: false,
+            },
+            ticks: {
+                font: {
+                size: 14,
+                },
+            },
+            },
         },
         layout: {
             padding: 50
@@ -55,6 +68,7 @@ const LineGraph = ({ title, labels, data, forecast }) => {
                             {
                                 "label": "Y Values",
                                 "data": data,
+                                "cubicInterpolationMode": 'monotone',
                                 "backgroundColor": [
                                     '#77DD77'
                                 ],
