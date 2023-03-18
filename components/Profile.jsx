@@ -7,6 +7,7 @@ import data from "../data/config.json";
 import Contributions from './Contributions';
 import Resume from './Resume';
 import Stars from './Stars';
+import Forecast from './Forecast';
 
 const Profile = () => {
   const [tab, setTab] = useState('profile');
@@ -41,6 +42,8 @@ const Profile = () => {
         <button className='customButton' onClick={() => handleClick("commits")}>GitHub Commits</button>
         <a>|</a>
         <button className='customButton' onClick={() => handleClick("stars")}>GitHub Stars</button>
+        <a>|</a>
+        <button className='customButton' onClick={() => handleClick("forecast")}>Linear Regression Tool</button>
         <br />
         {tab === 'profile' && (
           <Resume />
@@ -53,6 +56,11 @@ const Profile = () => {
         {tab === 'stars' && (
           <div>
             <Stars />
+          </div>
+        )}
+        {tab === 'forecast' && (
+          <div>
+            <Forecast />
           </div>
         )}
       </div>

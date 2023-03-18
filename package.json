@@ -7,18 +7,23 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tensorflow/tfjs": "^4.2.0",
     "@toast-ui/editor": "^3.2.2",
     "@toast-ui/react-chart": "^4.6.1",
     "@toast-ui/react-editor": "^3.2.3",
     "@types/chart.js": "^2.9.37",
+    "@vercel/edge-functions-ui": "^0.2.1",
     "chart.js": "^4.2.1",
     "dotenv": "^16.0.3",
+    "fft-js": "^0.0.12",
+    "gl": "^6.0.2",
     "graphql-request": "^5.2.0",
     "next": "^12.1.0",
     "node-fetch": "^3.3.1",
     "react": "17.0.2",
     "react-chartjs-2": "^5.2.0",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "statsmodels-js": "^0.4.2"
   },
   "devDependencies": {
     "eslint": "8.7.0",
