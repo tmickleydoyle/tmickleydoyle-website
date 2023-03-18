@@ -74,7 +74,7 @@ async function handleSubmit(event) {
                         type="text"
                         value={data}
                         onChange={handleInputChange}
-                        placeholder="Enter data (comma-separated)"
+                        placeholder="Enter data (comma-separated): 5,4,6,7,5,6"
                     />
                 </label>
                 <button className='custombutton' type="submit">Submit</button>
