@@ -82,7 +82,7 @@ async function handleSubmit(event) {
             {!runningModel && (
                 <>
                     <br />
-                    <LineGraph title={`Linear Regression Forecast - R-Squared Value: ${rSquared.toFixed(2)}`} labels={indexes} data={input} forecast={yValues} />
+                    <LineGraph title={`Linear Regression - R-Squared Value: ${rSquared.toFixed(2)}`} labels={indexes} data={input} forecast={yValues} />
                 </>
             )}
             {runningModel && (
