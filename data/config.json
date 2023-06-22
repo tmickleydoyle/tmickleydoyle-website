@@ -12,8 +12,16 @@
             "school": "Le Moyne College"
         }
     ],
-    "current_role": "Staff Engineer, Analytics",
-    "current_company": "▲ Vercel",
+    "current_roles": [
+        {
+            "role": "Staff Engineer, Analytics",
+            "company": "Vercel"
+        },
+        {
+            "role": "Reviewer",
+            "company": "The Journal of Open Source Software"
+        }
+    ],
     "previous_roles": [
         {
             "role": "Senior Software Engineer, Data",
