@@ -32,7 +32,8 @@ const Resume = () => {
             )}
             {data.education && data.education.length > 0 && data.education.map((edu, index) => (
             <div key={index}>
-                <h2>{edu.degree}, {edu.school}</h2>
+                <h2>{edu.degree}</h2>
+                <h3>{edu.school}</h3>
             </div>
             ))}
         </div>
