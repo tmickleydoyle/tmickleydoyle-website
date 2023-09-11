@@ -7,3 +7,9 @@ run locally:
 $ bun install
 $ bun run dev
 ```
+
+build output locally:
+
+```bash
+bun run build
+```
