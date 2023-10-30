@@ -1,10 +1,8 @@
 import path from 'path';
 import { promises as fs } from 'fs';
 
-export const config = {
-  runtime: 'edge',
-  regions: ['iad1'],
-};
+export const runtime = 'edge'; // 'nodejs' is the default
+export const preferredRegion = 'iad1'; // only execute this function on iad1
 
 export default async function handler(req, res) {
   const jsonDirectory = path.join(process.cwd());
