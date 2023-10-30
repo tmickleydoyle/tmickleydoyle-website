@@ -1,5 +1,8 @@
 import fetch from 'node-fetch';
 
+export const runtime = 'edge'; // 'nodejs' is the default
+export const preferredRegion = 'iad1'; // only execute this function on iad1
+
 const query = `
     query($username: String!) {
         user(login: $username) {
