@@ -1,4 +1,4 @@
-import React from 'react';
+import { React, useEffect } from 'react';
 
 import { useState } from 'react';
 
@@ -31,7 +31,7 @@ function linearRegression(y, x) {
 
 const ForecastPage = () => {
     const [input, setInput] = useState([]);
-    const [data, setData] = useState('');
+    const [data, setData] = useState('1,2,3,2,3,4,3,4,5,4,5,6,5,6,7,6,7,8,7,8,9');
     const [rSquared, setRSquared] = useState(0);
     const [indexes, setIndexes] = useState([]);
     const [yValues, setYValues] = useState([]);
@@ -65,6 +65,16 @@ async function handleSubmit(event) {
   setRunningModel(false);
 }
 
+useEffect(() => {
+    // Get the button element by its ID
+    const button = document.getElementById('autoClickButton');
+
+    // Simulate a click on the button
+    if (button) {
+      button.click();
+    }
+  }, []);
+
     return (
         <div>
             <h1>Linear Regression Model</h1>
@@ -77,7 +87,7 @@ async function handleSubmit(event) {
                         placeholder="Enter data (comma-separated): 5,4,6,7,5,6"
                     />
                 </label>
-                <button className='custombutton' type="submit">Submit</button>
+                <button id="autoClickButton" className='custombutton' type="submit">Submit</button>
             </form>
             {!runningModel && (
                 <>
