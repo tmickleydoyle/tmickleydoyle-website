@@ -15,33 +15,40 @@
     "current_roles": [
         {
             "role": "Director, Data Platform",
-            "company": "Vercel"
+            "company": "Vercel",
+            "summary": "Leads strategic vision and implementation for data management, including development of a streaming data solution with Kafka and Flink. Collaborates across departments to ensure data accessibility and quality, and consults on data collection and anomaly detection strategies."
         },
         {
             "role": "Reviewer",
-            "company": "The Journal of Open Source Software"
+            "company": "The Journal of Open Source Software",
+            "summary": "Provides peer reviews for open-source software publications, contributing to the academic community by evaluating software quality and innovation."
         }
     ],
     "previous_roles": [
         {
             "role": "Staff Engineer, Analytics",
-            "company": "Vercel"
+            "company": "Vercel",
+            "summary": "Key player in building the data organization and scaling data infrastructure. Developed data pipelines, security frameworks, and key metrics pipelines while leading the RFC process for data projects."
         },
         {
             "role": "Senior Software Engineer, Data",
-            "company": "GitHub"
+            "company": "GitHub",
+            "summary": "Enhanced metrics scalability, created alerting systems, maintained data catalog, and provided SQL training to drive data analysis and product growth."
         },
         {
             "role": "Data Scientist, Engineering",
-            "company": "Lucid"
+            "company": "Lucid",
+            "summary": "Engineered deep learning software for pricing, developed forecasting models, and established clustering for market personas to support product strategy and financial planning."
         },
         {
             "role": "Teacher, Elementary School",
-            "company": "Lagniappe Academies, New Orleans"
+            "company": "Lagniappe Academies, New Orleans",
+            "summary": "Implemented data-driven science curricula and developed predictive models to enhance academic performance and instructional strategies."
         },
         {
             "role": "Construction Worker, Seabee",
-            "company": "U.S. Navy"
+            "company": "U.S. Navy",
+            "summary": "Managed projects and optimized operations to support mission objectives and improve team performance."
         }
     ],
     "custom_contact_links": [
