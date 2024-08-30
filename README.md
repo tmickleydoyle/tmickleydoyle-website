@@ -4,12 +4,12 @@ About me
 run locally:
 
 ```bash
-$ bun install
-$ bun run dev
+$ npm install
+$ npm run dev
 ```
 
 build output locally:
 
 ```bash
-bun run build
+npm run build
 ```
