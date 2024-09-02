@@ -10,6 +10,7 @@ import Stars from "./Stars";
 import Forecast from "./Forecast";
 import PrioritizationDoc from "./PrioritizationDoc";
 import StartProjectDoc from "./StartProjectDoc";
+import MetricsMethodologyDoc from "./MetricsMethodologyDoc";
 
 const Profile = () => {
   const [tab, setTab] = useState("profile");
@@ -60,6 +61,11 @@ const Profile = () => {
           Scoping New Data Science Projects
         </button>
         <a>|</a>
+        <button className="customButton" onClick={() => handleClick("metrics")}>
+          Metrics Methodology
+        </button>
+        <br />
+        <br />
         <button className="customButton" onClick={() => handleClick("commits")}>
           GitHub Commits
         </button>
@@ -84,6 +90,11 @@ const Profile = () => {
         {tab === "start" && (
           <div>
             <StartProjectDoc />
+          </div>
+        )}
+        {tab === "metrics" && (
+          <div>
+            <MetricsMethodologyDoc />
           </div>
         )}
         {tab === "commits" && (
