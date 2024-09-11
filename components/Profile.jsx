@@ -55,6 +55,7 @@ export default function Profile() {
       <br />
       <hr className="w-2/5 border-gray-300 border-t-2 my-4" />
       <br />
+      <h2>Information</h2>
       <div className="space-x-2">
         <button className="customButton" onClick={() => handleClick("profile")}>
           Profile
@@ -76,6 +77,7 @@ export default function Profile() {
         </button>
       </div>
       <br />
+      <h2>Tools/Code</h2>
       <div className="space-x-2">
         <button
           className="customButton"
