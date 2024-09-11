@@ -11,6 +11,7 @@ import Forecast from "./Forecast";
 import PrioritizationDoc from "./PrioritizationDoc";
 import StartProjectDoc from "./StartProjectDoc";
 import MetricsMethodologyDoc from "./MetricsMethodologyDoc";
+import PythonCodeBox from "./PythonBuildingTrees";
 
 const Profile = () => {
   const [tab, setTab] = useState("profile");
@@ -80,6 +81,13 @@ const Profile = () => {
         >
           Linear Regression Tool
         </button>
+        <a>|</a>
+        <button
+          className="customButton"
+          onClick={() => handleClick("treeBuilding")}
+        >
+          Python: Tree Builder Class
+        </button>
         <br />
         {tab === "profile" && <Resume />}
         {tab === "projects" && (
@@ -110,6 +118,14 @@ const Profile = () => {
         {tab === "forecast" && (
           <div>
             <Forecast />
+          </div>
+        )}
+        {tab === "treeBuilding" && (
+          <div>
+            <PythonCodeBox
+              code={data.tree_building_code}
+              title="Python Code: Tree Builder Class"
+            />
           </div>
         )}
       </div>
