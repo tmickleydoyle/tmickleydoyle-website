@@ -6,9 +6,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
 import data from "../data/config.json";
-import Contributions from "./Contributions";
 import Resume from "./Resume";
-import Stars from "./Stars";
 import Forecast from "./Forecast";
 import PrioritizationDoc from "./PrioritizationDoc";
 import StartProjectDoc from "./StartProjectDoc";
@@ -79,14 +77,6 @@ export default function Profile() {
       </div>
       <br />
       <div className="space-x-2">
-        <button className="customButton" onClick={() => handleClick("commits")}>
-          GitHub Commits
-        </button>
-        <span>|</span>
-        <button className="customButton" onClick={() => handleClick("stars")}>
-          GitHub Stars
-        </button>
-        <span>|</span>
         <button
           className="customButton"
           onClick={() => handleClick("forecast")}
@@ -106,8 +96,6 @@ export default function Profile() {
       {tab === "projects" && <PrioritizationDoc />}
       {tab === "start" && <StartProjectDoc />}
       {tab === "metrics" && <MetricsMethodologyDoc />}
-      {tab === "commits" && <Contributions />}
-      {tab === "stars" && <Stars />}
       {tab === "forecast" && <Forecast />}
       {tab === "treeBuilding" && (
         <PythonCodeBox
