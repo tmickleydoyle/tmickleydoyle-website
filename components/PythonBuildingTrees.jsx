@@ -60,7 +60,7 @@ export default function BinaryTreeDisplay() {
         Args:
             level (int, optional): The current tree level (depth). Defaults to 0.
             prefix (str, optional): The prefix for the current level. Defaults to "Root: ".
-        
+
         Returns:
             str: The string representation of the tree.
         """
@@ -70,28 +70,57 @@ export default function BinaryTreeDisplay() {
         if self.right:
             ret += self.right.__str__(level + 1, "R--- ")
         return ret
+    
+def printInorder(root):
+    if root:
+        printInorder(root.left)
+        print(root.val),
+        printInorder(root.right)
 
-# Example usage:
-root = Node(1)
-root.insert_at_path([('right', 1)], 2)
-root.insert_at_path([('left', 1)], 3)
-root.insert_at_path([('right', 1), ('right', 2)], 4)
-root.insert_at_path([('right', 1), ('left', 2)], 5)
-root.insert_at_path([('left', 1), ('left', 3)], 6)
-root.insert_at_path([('left', 1), ('right', 3)], 7)
-root.insert_at_path([('right', 1), ('right', 2), ('left', 4)], 8)
-root.insert_at_path([('right', 1), ('right', 2), ('right', 4)], 9)
-root.insert_at_path([('right', 1), ('left', 2), ('left', 5)], 10)
-root.insert_at_path([('right', 1), ('left', 2), ('right', 5)], 11)
-root.insert_at_path([('left', 1), ('left', 3), ('left', 6)], 12)
-root.insert_at_path([('left', 1), ('left', 3), ('right', 6)], 13)
-root.insert_at_path([('left', 1), ('right', 3), ('left', 7)], 14)
-root.insert_at_path([('left', 1), ('right', 3), ('right', 7)], 15)
+def printPostorder(root):
+    if root:
+        printPostorder(root.left)
+        printPostorder(root.right)
+        print(root.val),
 
-print(root)
+def printPreorder(root):
+    if root:
+        print(root.val),
+        printPreorder(root.left)
+        printPreorder(root.right)
+    
+if __name__ == "__main__":
+    root = Node(1)
+    root.insert_at_path([('right', 1)], 2)
+    root.insert_at_path([('left', 1)], 3)
+    root.insert_at_path([('right', 1), ('right', 2)], 4)
+    root.insert_at_path([('right', 1), ('left', 2)], 5)
+    root.insert_at_path([('left', 1), ('left', 3)], 6)
+    root.insert_at_path([('left', 1), ('right', 3)], 7)
+    root.insert_at_path([('right', 1), ('right', 2), ('left', 4)], 8)
+    root.insert_at_path([('right', 1), ('right', 2), ('right', 4)], 9)
+    root.insert_at_path([('right', 1), ('left', 2), ('left', 5)], 10)
+    root.insert_at_path([('right', 1), ('left', 2), ('right', 5)], 11)
+    root.insert_at_path([('left', 1), ('left', 3), ('left', 6)], 12)
+    root.insert_at_path([('left', 1), ('left', 3), ('right', 6)], 13)
+    root.insert_at_path([('left', 1), ('right', 3), ('left', 7)], 14)
+    root.insert_at_path([('left', 1), ('right', 3), ('right', 7)], 15)
+
+    print("Show tree:")
+    print(root)
+
+    print("Inorder traversal:")
+    printInorder(root)
+
+    print("Preorder traversal:")
+    printPreorder(root)
+
+    print("Postorder traversal:")
+    printPostorder(root)
 `;
 
   const codeOutput = `
+Show tree:
 Root: 1
     L--- 3
         L--- 6
@@ -107,6 +136,55 @@ Root: 1
         R--- 4
             L--- 8
             R--- 9
+
+Inorder traversal:
+12
+6
+13
+3
+14
+7
+15
+1
+10
+5
+11
+2
+8
+4
+9
+Preorder traversal:
+1
+3
+6
+12
+13
+7
+14
+15
+2
+5
+10
+11
+4
+8
+9
+Postorder traversal:
+12
+13
+6
+14
+15
+7
+3
+10
+11
+5
+8
+9
+4
+2
+1
 `;
 
 
