@@ -9,27 +9,62 @@ export default function BinaryTreeDisplay() {
 
   const pythonCode = `class Node:
     def __init__(self, key):
+        """
+        Initializes a new node with the specified key.
+
+        Args:
+            key (int): The value of the node.
+        """
         self.left = None
         self.right = None
         self.val = key
+
     def insert_at_path(self, path, key):
+        """
+        Inserts a new node with the specified key at the given path.
+
+        Args:
+            path (list of tuples): The path to the insertion point. Each tuple contains a direction ('left' or 'right') and a parent value.
+            key (int): The value of the new node to insert.
+
+        Raises:
+            ValueError: If the parent value in the path does not match the current node's value.
+        """
         current = self
-        for direction, _ in path[:-1]:
+        for direction, parent_value in path[:-1]:
+            if parent_value == current.val:
+                if direction == 'left':
+                    if current.left is None:
+                        current.left = Node(None)
+                    current = current.left
+                elif direction == 'right':
+                    if current.right is None:
+                        current.right = Node(None)
+                    current = current.right
+            else:
+                raise ValueError(f"Value {parent_value} does not match current value {current.val}")
+        
+        direction, parent_value = path[-1]
+        if parent_value == current.val:
             if direction == 'left':
-                if current.left is None:
-                    current.left = Node(None)
-                current = current.left
+                current.left = Node(key)
             elif direction == 'right':
-                if current.right is None:
-                    current.right = Node(None)
-                current = current.right
-        direction, _ = path[-1]
-        if direction == 'left':
-            current.left = Node(key)
-        elif direction == 'right':
-            current.right = Node(key)
+                current.right = Node(key)
+        else:
+            raise ValueError(f"Value {parent_value} does not match current value {current.val}")
+
     def __str__(self, level=0, prefix="Root: "):
-        ret = " " * (level*4) + prefix + str(self.val) + "\\n"
+        """
+        Returns a string representation of the tree for easy visualization.
+
+        Args:
+            level (int, optional): The current tree level (depth). Defaults to 0.
+            prefix (str, optional): The prefix for the current level. Defaults to "Root: ".
+        
+        Returns:
+            str: The string representation of the tree.
+        """
+        ret = " " * (level*4) + prefix + str(self.val) + "\n"
         if self.left:
             ret += self.left.__str__(level + 1, "L--- ")
         if self.right:
@@ -39,19 +74,19 @@ export default function BinaryTreeDisplay() {
 # Example usage:
 root = Node(1)
 root.insert_at_path([('right', 1)], 2)
-root.insert_at_path([('left', 2)], 3)
+root.insert_at_path([('left', 1)], 3)
 root.insert_at_path([('right', 1), ('right', 2)], 4)
 root.insert_at_path([('right', 1), ('left', 2)], 5)
-root.insert_at_path([('left', 2), ('left', 3)], 6)
-root.insert_at_path([('left', 2), ('right', 3)], 7)
+root.insert_at_path([('left', 1), ('left', 3)], 6)
+root.insert_at_path([('left', 1), ('right', 3)], 7)
 root.insert_at_path([('right', 1), ('right', 2), ('left', 4)], 8)
 root.insert_at_path([('right', 1), ('right', 2), ('right', 4)], 9)
 root.insert_at_path([('right', 1), ('left', 2), ('left', 5)], 10)
 root.insert_at_path([('right', 1), ('left', 2), ('right', 5)], 11)
-root.insert_at_path([('left', 2), ('left', 3), ('left', 6)], 12)
-root.insert_at_path([('left', 2), ('left', 3), ('right', 6)], 13)
-root.insert_at_path([('left', 2), ('right', 3), ('left', 7)], 14)
-root.insert_at_path([('left', 2), ('right', 3), ('right', 7)], 15)
+root.insert_at_path([('left', 1), ('left', 3), ('left', 6)], 12)
+root.insert_at_path([('left', 1), ('left', 3), ('right', 6)], 13)
+root.insert_at_path([('left', 1), ('right', 3), ('left', 7)], 14)
+root.insert_at_path([('left', 1), ('right', 3), ('right', 7)], 15)
 
 print(root)
 `;
