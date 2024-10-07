@@ -26,11 +26,6 @@
     ],
     "previous_roles": [
         {
-            "role": "Staff Engineer, Analytics",
-            "company": "Vercel",
-            "summary": "Key player in building the data organization and scaling data infrastructure. Developed data pipelines, security frameworks, and key metrics pipelines while leading the RFC process for data projects."
-        },
-        {
             "role": "Senior Software Engineer, Data",
             "company": "GitHub",
             "summary": "Enhanced metrics scalability, created alerting systems, maintained data catalog, and provided SQL training to drive data analysis and product growth."
