@@ -1,8 +1,7 @@
 'use client'
 
-import { Github, Linkedin, Mail, Moon, Sun } from "lucide-react"
+import { Github, Linkedin, Mail } from "lucide-react"
 import Link from "next/link"
-import { useTheme } from "next-themes"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -10,7 +9,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 
 export function Portfolio() {
-  const { theme, setTheme } = useTheme()
 
   return (
     <div className="min-h-screen bg-black text-purple-300 flex justify-center">
