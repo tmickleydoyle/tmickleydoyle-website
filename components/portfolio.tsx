@@ -1,15 +1,14 @@
-'use client'
+"use client";
 
-import { Github, Linkedin, Mail } from "lucide-react"
-import Link from "next/link"
+import { Github, Linkedin, Mail } from "lucide-react";
+import Link from "next/link";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
 export function Portfolio() {
-
   return (
     <div className="min-h-screen bg-black text-purple-300 flex justify-center">
       <div className="container max-w-3xl py-10">
@@ -81,36 +80,38 @@ export function Portfolio() {
             <CardContent className="space-y-4">
               <div>
                 <h3 className="font-semibold text-purple-300">
-                  Data Platform
+                  Data Platform Design
                 </h3>
                 <p className="mt-2 text-purple-200">
-                  Leading strategic initiatives in data management and
-                  engineering. Specializing in developing scalable data
-                  solutions and fostering cross-departmental collaboration to
-                  drive data-driven decision making.
+                  Designing intuitive data solutions that{" "}
+                  <Link
+                    href="https://github.com/tmickleydoyle/documents/blob/main/Prioritizing_Projects.md"
+                    className="text-purple-400 hover:text-purple-300 underline"
+                  >
+                    drive product-led growth by working cross-collaboratively
+                  </Link>{" "}
+                  with product, engineering, and business teams. Focused on
+                  simplifying data processing, storage, and analytics adoption
+                  across teams. Creating seamless data platforms that enable
+                  rapid product iteration and data-driven decision making.
                 </p>
               </div>
               <Separator className="bg-purple-500/30" />
               <div>
                 <h3 className="font-semibold text-purple-300">
-                  Open Source Contribution
-                </h3>
-                <p className="mt-2 text-purple-200">
-                  Constributes to the open-source community through
-                  code reviews, mentorship, and software evaluation.
-                  Promoting innovation and best practices in software
-                  and data development.
-                </p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-purple-300">
                   Data Engineering
                 </h3>
                 <p className="mt-2 text-purple-200">
-                  Architected and implemented robust data systems, focusing on
-                  scalability and performance. Developed data pipelines,
-                  analytics tools, and machine learning models to drive product
-                  improvements and business insights.
+                  Architected and implemented robust data systems, focusing on{" "}
+                  <Link
+                    href="https://github.com/tmickleydoyle/documents/blob/main/Fork_Sharing_Data_Across_Stores.md"
+                    className="text-purple-400 hover:text-purple-300 underline"
+                  >
+                    scalability and performance
+                  </Link>
+                  . Developed data pipelines, analytics tools, and machine
+                  learning models to drive product improvements and business
+                  insights.
                 </p>
               </div>
               <Separator className="bg-purple-500/30" />
@@ -121,8 +122,14 @@ export function Portfolio() {
                 <p className="mt-2 text-purple-200">
                   Applied advanced statistical methods and machine learning
                   techniques to solve complex business problems. Translated data
-                  insights into actionable strategies, enhancing product
-                  features and user experiences.
+                  insights into actionable strategies,{" "}
+                  <Link
+                    href="https://github.com/tmickleydoyle/documents/blob/main/Monstera_Company_Metric_Design.md"
+                    className="text-purple-400 hover:text-purple-300 underline"
+                  >
+                    enhancing product features and user experiences
+                  </Link>
+                  .
                 </p>
               </div>
             </CardContent>
@@ -149,10 +156,11 @@ export function Portfolio() {
               <div>
                 <h3 className="font-semibold text-purple-300">Construction</h3>
                 <p className="mt-2 text-purple-200">
-                  My time in the Navy working construction sparked a lasting passion
-                  for hands-on work. Today, I find immense joy in DIY projects,
-                  home improvements, and helping friends with their renovations.
-                  Working with my hands has become an essential part of who I am.
+                  My time in the Navy working construction sparked a lasting
+                  passion for hands-on work. Today, I find immense joy in DIY
+                  projects, home improvements, and helping friends with their
+                  renovations. Working with my hands has become an essential
+                  part of who I am.
                 </p>
               </div>
             </CardContent>
