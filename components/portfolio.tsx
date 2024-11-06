@@ -96,10 +96,10 @@ export function Portfolio() {
                   Open Source Contribution
                 </h3>
                 <p className="mt-2 text-purple-200">
-                  Actively contributing to the open-source community through
-                  code reviews, mentorship, and software quality evaluation.
+                  Constributes to the open-source community through
+                  code reviews, mentorship, and software evaluation.
                   Promoting innovation and best practices in software
-                  development.
+                  and data development.
                 </p>
               </div>
               <div>
@@ -149,10 +149,10 @@ export function Portfolio() {
               <div>
                 <h3 className="font-semibold text-purple-300">Construction</h3>
                 <p className="mt-2 text-purple-200">
-                  Applied advanced statistical methods and machine learning
-                  techniques to solve complex business problems. Translated data
-                  insights into actionable strategies, enhancing product
-                  features and user experiences.
+                  My time in the Navy working construction sparked a lasting passion
+                  for hands-on work. Today, I find immense joy in DIY projects,
+                  home improvements, and helping friends with their renovations.
+                  Working with my hands has become an essential part of who I am.
                 </p>
               </div>
             </CardContent>
