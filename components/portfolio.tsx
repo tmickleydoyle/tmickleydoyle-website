@@ -85,13 +85,18 @@ export function Portfolio() {
                 <p className="mt-2 text-purple-200">
                   Designing intuitive data solutions that{" "}
                   <Link
-                    href="https://github.com/tmickleydoyle/documents/blob/main/Prioritizing_Projects.md"
-                    className="text-purple-400 hover:text-purple-300 underline"
+                  href="https://github.com/tmickleydoyle/documents/blob/main/Prioritizing_Projects.md"
+                  className="text-purple-400 hover:text-purple-300 underline"
                   >
-                    drive product-led growth by working cross-collaboratively
+                  drive product-led growth by working cross-collaboratively
                   </Link>{" "}
-                  with product, engineering, and business teams. Focused on
+                  with product, engineering, and business teams. Focused on{" "}
+                  <Link
+                  href="https://page-view-ab-stats.vercel.app"
+                  className="text-purple-400 hover:text-purple-300 underline"
+                  >
                   simplifying data processing, storage, and analytics adoption
+                  </Link>{" "}
                   across teams. Creating seamless data platforms that enable
                   rapid product iteration and data-driven decision making.
                 </p>
