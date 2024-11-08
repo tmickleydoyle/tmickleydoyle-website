@@ -90,7 +90,7 @@ export function Portfolio() {
                   >
                   drive product-led growth by working cross-collaboratively
                   </Link>{" "}
-                  with product, engineering, and business teams. Focused on{" "}
+                  with product, engineering, and business teams. Focusing on{" "}
                   <Link
                   href="https://page-view-ab-stats.vercel.app"
                   className="text-purple-400 hover:text-purple-300 underline"
@@ -107,14 +107,14 @@ export function Portfolio() {
                   Data Engineering
                 </h3>
                 <p className="mt-2 text-purple-200">
-                  Architected and implemented robust data systems, focusing on{" "}
+                  Architecting and implementing robust data systems, focusing on{" "}
                   <Link
                     href="https://github.com/tmickleydoyle/documents/blob/main/Fork_Sharing_Data_Across_Stores.md"
                     className="text-purple-400 hover:text-purple-300 underline"
                   >
                     scalability and performance
                   </Link>
-                  . Developed data pipelines, analytics tools, and machine
+                  . Developing data pipelines, analytics tools, and machine
                   learning models to drive product improvements and business
                   insights.
                 </p>
@@ -125,8 +125,8 @@ export function Portfolio() {
                   Data Science and Analytics
                 </h3>
                 <p className="mt-2 text-purple-200">
-                  Applied advanced statistical methods and machine learning
-                  techniques to solve complex business problems. Translated data
+                  Appling advanced statistical methods and machine learning
+                  techniques to solve complex business problems. Translating data
                   insights into actionable strategies,{" "}
                   <Link
                     href="https://github.com/tmickleydoyle/documents/blob/main/Monstera_Company_Metric_Design.md"
@@ -150,10 +150,9 @@ export function Portfolio() {
                   Community Gardener
                 </h3>
                 <p className="mt-2 text-purple-200">
-                  Passionate about sustainable urban agriculture and community
-                  engagement. Maintaining community gardens, organizing
-                  volunteer programs, and educating local residents about
-                  sustainable gardening practices. Contributing to food security
+                  Passionate about sustainable urban agriculture and mutual aid. Maintaining community gardens, organizing
+                  volunteer programs, and sharing skills with local residents about
+                  regenerative gardening practices. Contributing to food security
                   initiatives and environmental conservation efforts.
                 </p>
               </div>
