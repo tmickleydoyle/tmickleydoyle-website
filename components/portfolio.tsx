@@ -80,22 +80,41 @@ export function Portfolio() {
             <CardContent className="space-y-4">
               <div>
                 <h3 className="font-semibold text-purple-300">
+                  ML Engineering
+                </h3>
+                <p className="mt-2 text-purple-200">
+                  Specializing in fine-tuning language models to{" "}
+                  <Link
+                    href="https://tmickleydoyle-chat.vercel.app"
+                    className="text-purple-400 hover:text-purple-300 underline"
+                  >
+                    enhance user experience through patterned responses
+                  </Link>{" "}
+                  without overwhelming them with text. Focused on
+                  fine-tuning models for SQL onboarding to empower co-workers
+                  in data exploration. Creating
+                  intelligent solutions that streamline learning processes and
+                  improve data accessibility across teams with a variety of ML applications.
+                </p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-purple-300">
                   Data Platform Design
                 </h3>
                 <p className="mt-2 text-purple-200">
                   Designing intuitive data solutions that{" "}
                   <Link
-                  href="https://github.com/tmickleydoyle/documents/blob/main/Prioritizing_Projects.md"
-                  className="text-purple-400 hover:text-purple-300 underline"
+                    href="https://github.com/tmickleydoyle/documents/blob/main/Prioritizing_Projects.md"
+                    className="text-purple-400 hover:text-purple-300 underline"
                   >
-                  drive product-led growth by working cross-collaboratively
+                    drive product-led growth by working cross-collaboratively
                   </Link>{" "}
                   with product, engineering, and business teams. Focusing on{" "}
                   <Link
-                  href="https://page-view-ab-stats.vercel.app"
-                  className="text-purple-400 hover:text-purple-300 underline"
+                    href="https://page-view-ab-stats.vercel.app"
+                    className="text-purple-400 hover:text-purple-300 underline"
                   >
-                  simplifying data processing, storage, and analytics adoption
+                    simplifying data processing, storage, and analytics adoption
                   </Link>{" "}
                   across teams. Creating seamless data platforms that enable
                   rapid product iteration and data-driven decision making.
