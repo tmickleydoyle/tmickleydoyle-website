@@ -83,15 +83,14 @@ export function Portfolio() {
                   ML Engineering
                 </h3>
                 <p className="mt-2 text-purple-200">
-                  Specializing in fine-tuning language models to{" "}
+                  Building fine-tuned language models to{" "}
                   <Link
                     href="https://tmickleydoyle-chat.vercel.app"
                     className="text-purple-400 hover:text-purple-300 underline"
                   >
-                    enhance user experience through patterned responses
-                  </Link>{" "}
-                  without overwhelming them with text. Focused on
-                  fine-tuning models for SQL onboarding to empower co-workers
+                    enhance user experience
+                  </Link>{" "}. Focused on
+                  language models for SQL onboarding to empower co-workers
                   in data exploration. Creating
                   intelligent solutions that streamline learning processes and
                   improve data accessibility across teams with a variety of ML applications.
