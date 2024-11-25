@@ -88,11 +88,27 @@ export function Portfolio() {
                     href="https://tmickleydoyle-chat.vercel.app"
                     className="text-purple-400 hover:text-purple-300 underline"
                   >
+<<<<<<< HEAD
                     enhance user experience
                   </Link>{" "}. Focused on
                   language models for SQL onboarding to empower co-workers
                   in data exploration. Creating
                   intelligent solutions that streamline learning processes and
+=======
+                    enhance user experience through patterned responses
+                  </Link>{" "}
+                  without overwhelming them with text. Focused on
+                  fine-tuning models for SQL onboarding to empower co-workers
+                  in data exploration. 
+                  <Link
+                    href="https://github.com/tmickleydoyle/documents/blob/main/Chatbot_Experience_Healthcare.md"
+                    className="text-purple-400 hover:text-purple-300 underline"
+                  >
+                  Creating
+                  intelligent solutions
+                  </Link>{" "}
+                  that streamline learning processes and
+>>>>>>> ecb245e (u)
                   improve data accessibility across teams with a variety of ML applications.
                 </p>
               </div>
