@@ -211,6 +211,8 @@ export async function POST(req: NextRequest) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'User-Agent': 'Mozilla/5.0 (compatible; NextJS-App)',
+          'Origin': 'https://tmickleydoyle.vercel.app',
           ...(process.env.OLLAMA_API_KEY ? { 'Authorization': `Bearer ${process.env.OLLAMA_API_KEY}` } : {})
         },
         signal: controller.signal,
@@ -227,6 +229,7 @@ export async function POST(req: NextRequest) {
 
       if (!httpRes.ok) {
         const text = await httpRes.text().catch(() => '')
+        console.error(`Ollama API error - Status: ${httpRes.status}, Response: ${text}`)
         return NextResponse.json({
           error: `Remote Ollama API error: ${httpRes.status} ${httpRes.statusText}${text ? ` - ${text}` : ''}`
         }, { status: httpRes.status })
@@ -262,6 +265,8 @@ export async function POST(req: NextRequest) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (compatible; NextJS-App)',
+        'Origin': 'https://your-vercel-domain.vercel.app',
         ...(process.env.OLLAMA_API_KEY ? { 'Authorization': `Bearer ${process.env.OLLAMA_API_KEY}` } : {})
       },
       signal: controller.signal,
@@ -276,6 +281,7 @@ export async function POST(req: NextRequest) {
 
     if (!httpRes.ok) {
       const text = await httpRes.text().catch(() => '')
+      console.error(`Ollama streaming API error - Status: ${httpRes.status}, Response: ${text}`)
       return NextResponse.json({
         error: `Remote Ollama API error: ${httpRes.status} ${httpRes.statusText}${text ? ` - ${text}` : ''}`
       }, { status: httpRes.status })
@@ -324,6 +330,8 @@ export async function POST(req: NextRequest) {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
+                  'User-Agent': 'Mozilla/5.0 (compatible; NextJS-App)',
+                  'Origin': 'https://tmickleydoyle.vercel.app',
                   ...(process.env.OLLAMA_API_KEY ? { 'Authorization': `Bearer ${process.env.OLLAMA_API_KEY}` } : {})
                 },
                 body: JSON.stringify({ model: MODEL, messages: msgs, options: { temperature: 0.7, top_p: 0.9, num_ctx: 128000 }, stream: false })
