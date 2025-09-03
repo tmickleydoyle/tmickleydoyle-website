@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { buildAssistantDynamicContext } from '@/lib/context'
 import { listUserRepos, listRepoContents, getFileText } from '@/lib/github'
 
-const API_URL = process.env.OLLAMA_API_URL || 'http://ollama.com/api/chat'
+const API_URL = process.env.OLLAMA_API_URL || 'http://localhost:11434/api/chat'
 const MODEL = process.env.OLLAMA_MODEL || 'gpt-oss:20b'
 
 const SYSTEM_PROMPT = `You are Thomas Mickley-Doyle's AI assistant embedded in his terminal portfolio website. You help visitors learn about Thomas's professional experience and background.
@@ -207,12 +207,11 @@ export async function POST(req: NextRequest) {
     for (let iter = 0; iter < maxIters; iter++) {
       const controller = new AbortController()
       const timeoutId = setTimeout(() => controller.abort(), 45000)
-      const httpRes = await fetch(API_URL, {
+  const httpRes = await fetch(API_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'User-Agent': 'Mozilla/5.0 (compatible; NextJS-App)',
-          'Origin': 'https://tmickleydoyle.vercel.app',
+          'User-Agent': 'Mozilla/5.0 (compatible; NextJS-Vercel)',
           ...(process.env.OLLAMA_API_KEY ? { 'Authorization': `Bearer ${process.env.OLLAMA_API_KEY}` } : {})
         },
         signal: controller.signal,
@@ -265,8 +264,7 @@ export async function POST(req: NextRequest) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'User-Agent': 'Mozilla/5.0 (compatible; NextJS-App)',
-        'Origin': 'https://your-vercel-domain.vercel.app',
+        'User-Agent': 'Mozilla/5.0 (compatible; NextJS-Vercel)',
         ...(process.env.OLLAMA_API_KEY ? { 'Authorization': `Bearer ${process.env.OLLAMA_API_KEY}` } : {})
       },
       signal: controller.signal,
@@ -330,8 +328,7 @@ export async function POST(req: NextRequest) {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
-                  'User-Agent': 'Mozilla/5.0 (compatible; NextJS-App)',
-                  'Origin': 'https://tmickleydoyle.vercel.app',
+                  'User-Agent': 'Mozilla/5.0 (compatible; NextJS-Vercel)',
                   ...(process.env.OLLAMA_API_KEY ? { 'Authorization': `Bearer ${process.env.OLLAMA_API_KEY}` } : {})
                 },
                 body: JSON.stringify({ model: MODEL, messages: msgs, options: { temperature: 0.7, top_p: 0.9, num_ctx: 128000 }, stream: false })
