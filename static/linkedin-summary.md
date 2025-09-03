@@ -1,0 +1,1 @@
+Thomas Doyle is a data-focused engineer blending ML engineering, data platforms, and practical analytics. He collaborates cross-functionally and ships end-to-end features that improve product outcomes. (Replace this file with your real LinkedIn summary to enrich the assistant’s knowledge.)

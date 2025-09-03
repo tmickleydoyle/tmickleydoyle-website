@@ -1,92 +1,210 @@
 "use client";
 
-import { Github, Linkedin, Mail } from "lucide-react";
+import { Terminal } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+interface ChatMessage {
+  id: string;
+  type: "user" | "assistant";
+  content: string;
+  timestamp: Date;
+}
 
 export function Portfolio() {
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const terminalEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () =>
+    terminalEndRef.current?.scrollIntoView({ behavior: "smooth" });
+
+  useEffect(() => {
+    if (messages.length) scrollToBottom();
+  }, [messages]);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  const sendMessage = async () => {
+    if (!input.trim() || isLoading) return;
+    const userMessage: ChatMessage = {
+      id: `${Date.now()}`,
+      type: "user",
+      content: input,
+      timestamp: new Date(),
+    };
+    setMessages((prev) => [...prev, userMessage]);
+    const currentInput = input;
+    setInput("");
+    setIsLoading(true);
+    try {
+      const history = [...messages, userMessage].map((m) => ({
+        role: m.type === "assistant" ? "assistant" : "user",
+        content: m.content,
+      }));
+
+      const assistantId = (Date.now() + 1).toString();
+      const placeholder: ChatMessage = {
+        id: assistantId,
+        type: "assistant",
+        content: "",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, placeholder]);
+
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "text/plain" },
+        body: JSON.stringify({ message: currentInput, history }),
+      });
+
+      if (!res.ok) {
+        const text = await res.text().catch(() => "");
+        const err = text || "Failed to get response";
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === assistantId ? { ...m, content: `Error: ${err}` } : m
+          )
+        );
+        return;
+      }
+
+      const reader = res.body?.getReader();
+      const decoder = new TextDecoder();
+      if (!reader) {
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === assistantId
+              ? { ...m, content: "Error: Empty response stream" }
+              : m
+          )
+        );
+        return;
+      }
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value, { stream: true });
+        if (chunk) {
+          setMessages((prev) =>
+            prev.map((m) =>
+              m.id === assistantId ? { ...m, content: m.content + chunk } : m
+            )
+          );
+        }
+      }
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `${Date.now() + 1}`,
+          type: "assistant",
+          content: "Error: Could not connect to the chat service",
+          timestamp: new Date(),
+        },
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-black text-purple-300 flex justify-center">
-      <div className="container max-w-3xl py-10">
-        <div className="flex justify-between items-center mb-8">
-          <div className="flex items-center gap-4">
-            <Avatar className="h-24 w-24 border-2 border-purple-500">
-              <AvatarImage
-                src="/static/images/profile_image.png"
-                alt="Profile picture"
-              />
-              <AvatarFallback>TD</AvatarFallback>
-            </Avatar>
-            <div>
-              <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
-                Thomas Mickley-Doyle
-              </h1>
-              <div className="flex gap-2 mt-2">
-                <Link href="https://github.com/tmickleydoyle">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-purple-400 hover:text-purple-300 hover:bg-purple-400/20"
-                  >
-                    <Github className="h-5 w-5" />
-                    <span className="sr-only">GitHub</span>
-                  </Button>
+    <div className="min-h-screen bg-[#0c0c0c] text-[#7db46c] font-mono p-2 sm:p-4">
+      <div className="max-w-5xl mx-auto">
+        <div className="bg-[#2d2d2d] rounded-t-lg border border-[#404040] p-3 flex items-center gap-2">
+          <div className="flex gap-2">
+            <div className="w-3 h-3 bg-[#ff5f56] rounded-full" />
+            <div className="w-3 h-3 bg-[#ffbd2e] rounded-full" />
+            <div className="w-3 h-3 bg-[#27c93f] rounded-full" />
+          </div>
+          <Terminal className="h-4 w-4 ml-2 text-[#8a8a8a]" />
+          <span className="text-[#8a8a8a] text-sm hidden sm:inline">
+            thomas@portfolio:~$
+          </span>
+        </div>
+
+        <div className="bg-[#0c0c0c] border-x border-b border-[#404040] rounded-b-lg p-3 sm:p-6 min-h-[400px] sm:min-h-[600px] overflow-x-auto max-h-[80vh] overflow-y-auto">
+          {/* Whoami */}
+          <div className="mb-6">
+            <div className="text-[#7db46c] text-sm sm:text-base">
+              thomas@portfolio:~$ whoami
+            </div>
+            <div className="text-[#7db46c] mb-4">
+              <div className="mt-4">
+                <span className="text-[#d4af37]">NAME:</span> Thomas Doyle
+              </div>
+              <div className="mt-2">
+                <span className="text-[#d4af37]">STATUS:</span> Online -
+                Available for opportunities
+              </div>
+            </div>
+            <div className="text-[#7db46c] mt-4 text-sm sm:text-base">
+              thomas@portfolio:~$ ls -la connections/
+            </div>
+            <div className="mt-2 space-y-1 text-sm sm:text-base">
+              <div className="flex gap-4">
+                <Link
+                  href="https://github.com/tmickleydoyle"
+                  className="text-[#87ceeb] hover:text-[#d4af37] transition-colors"
+                >
+                  [github] → tmickleydoyle
                 </Link>
-                <Link href="https://www.linkedin.com/in/thomas-mickley-doyle/">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-purple-400 hover:text-purple-300 hover:bg-purple-400/20"
-                  >
-                    <Linkedin className="h-5 w-5" />
-                    <span className="sr-only">LinkedIn</span>
-                  </Button>
+              </div>
+              <div className="flex gap-4">
+                <Link
+                  href="https://www.linkedin.com/in/thomas-mickley-doyle/"
+                  className="text-[#87ceeb] hover:text-[#d4af37] transition-colors"
+                >
+                  [linkedin] → thomas-doyle
                 </Link>
-                <Link href="mailto:tmickleydoyle@gmail.com">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-purple-400 hover:text-purple-300 hover:bg-purple-400/20"
-                  >
-                    <Mail className="h-5 w-5" />
-                    <span className="sr-only">Email</span>
-                  </Button>
+              </div>
+              <div className="flex gap-4">
+                <Link
+                  href="mailto:tmickleydoyle@gmail.com"
+                  className="text-[#87ceeb] hover:text-[#d4af37] transition-colors"
+                >
+                  [email] → tmickleydoyle@gmail.com
                 </Link>
               </div>
             </div>
           </div>
-        </div>
 
-        <Card className="mb-6 bg-transparent border-transparent">
-          <CardHeader>
-            <CardTitle className="text-2xl text-purple-400">Location</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-purple-300">
-              New Orleans, Louisiana, USA - Remote
-            </p>
-          </CardContent>
-        </Card>
+          {/* Location */}
+          <div className="mb-6">
+            <div className="text-[#7db46c] text-sm sm:text-base">
+              thomas@portfolio:~$ pwd
+            </div>
+            <div className="text-[#d4af37]">/home/thomas/location</div>
+            <div className="text-[#7db46c] mt-1">
+              Ithaca, New York, USA - Remote
+            </div>
+          </div>
 
-        <section className="space-y-6">
-          <Card className="bg-transparent border-transparent">
-            <CardHeader>
-              <CardTitle className="text-2xl text-purple-400">Work</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
+          {/* Experience */}
+          <div className="mb-6">
+            <div className="text-[#7db46c] text-sm sm:text-base">
+              thomas@portfolio:~$ cat work/experience.txt
+            </div>
+            <div className="mt-2 pl-2 sm:pl-4 border-l-2 border-[#404040] space-y-4 text-sm sm:text-base">
               <div>
-                <h3 className="font-semibold text-purple-300">
-                  ML Engineering
-                </h3>
-                <p className="mt-2 text-purple-200">
+                <div className="text-[#d4af37]">▶ ML Engineering</div>
+                <div className="text-[#7db46c] mt-2 leading-relaxed">
                   Building fine-tuned language models to{" "}
                   <Link
                     href="https://tmickleydoyle-chat.vercel.app"
-                    className="text-purple-400 hover:text-purple-300 underline"
+                    className="text-[#87ceeb] hover:text-[#d4af37] underline transition-colors"
                   >
                     enhance user experience through patterned responses
                   </Link>{" "}
@@ -95,107 +213,156 @@ export function Portfolio() {
                   exploration.{" "}
                   <Link
                     href="https://github.com/tmickleydoyle/documents/blob/main/Chatbot_Experience_Healthcare.md"
-                    className="text-purple-400 hover:text-purple-300 underline"
+                    className="text-[#87ceeb] hover:text-[#d4af37] underline transition-colors"
                   >
                     Creating intelligent solutions
                   </Link>{" "}
                   that streamline learning processes and improve data
                   accessibility across teams with a variety of ML applications.
-                </p>
+                </div>
               </div>
+              <div className="text-[#404040]">--------------------</div>
               <div>
-                <h3 className="font-semibold text-purple-300">
-                  Data Platform Design
-                </h3>
-                <p className="mt-2 text-purple-200">
+                <div className="text-[#d4af37]">▶ Data Platform Design</div>
+                <div className="text-[#7db46c] mt-2 leading-relaxed">
                   Designing intuitive data solutions that{" "}
                   <Link
                     href="https://github.com/tmickleydoyle/documents/blob/main/Prioritizing_Projects.md"
-                    className="text-purple-400 hover:text-purple-300 underline"
+                    className="text-[#87ceeb] hover:text-[#d4af37] underline transition-colors"
                   >
                     drive product-led growth by working cross-collaboratively
                   </Link>{" "}
                   with product, engineering, and business teams. Focusing on{" "}
                   <Link
                     href="https://page-view-ab-stats.vercel.app"
-                    className="text-purple-400 hover:text-purple-300 underline"
+                    className="text-[#87ceeb] hover:text-[#d4af37] underline transition-colors"
                   >
                     simplifying data processing, storage, and analytics adoption
                   </Link>{" "}
                   across teams. Creating seamless data platforms that enable
                   rapid product iteration and data-driven decision making.
-                </p>
+                </div>
               </div>
-              <Separator className="bg-purple-500/30" />
+              <div className="text-[#404040]">--------------------</div>
               <div>
-                <h3 className="font-semibold text-purple-300">
-                  Data Engineering
-                </h3>
-                <p className="mt-2 text-purple-200">
+                <div className="text-[#d4af37]">▶ Data Engineering</div>
+                <div className="text-[#7db46c] mt-2 leading-relaxed">
                   Architecting and implementing robust data systems, focusing on{" "}
                   <Link
                     href="https://github.com/tmickleydoyle/documents/blob/main/Fork_Sharing_Data_Across_Stores.md"
-                    className="text-purple-400 hover:text-purple-300 underline"
+                    className="text-[#87ceeb] hover:text-[#d4af37] underline transition-colors"
                   >
                     scalability and performance
                   </Link>
                   . Developing data pipelines, analytics tools, and machine
                   learning models to drive product improvements and business
                   insights.
-                </p>
+                </div>
               </div>
-              <Separator className="bg-purple-500/30" />
+              <div className="text-[#404040]">--------------------</div>
               <div>
-                <h3 className="font-semibold text-purple-300">
-                  Data Science and Analytics
-                </h3>
-                <p className="mt-2 text-purple-200">
+                <div className="text-[#d4af37]">
+                  ▶ Data Science and Analytics
+                </div>
+                <div className="text-[#7db46c] mt-2 leading-relaxed">
                   Applying advanced statistical methods and machine learning
                   techniques to solve complex business problems. Translating
                   data insights into actionable strategies,{" "}
                   <Link
                     href="https://github.com/tmickleydoyle/documents/blob/main/Monstera_Company_Metric_Design.md"
-                    className="text-purple-400 hover:text-purple-300 underline"
+                    className="text-[#87ceeb] hover:text-[#d4af37] underline transition-colors"
                   >
                     enhancing product features and user experiences
                   </Link>
                   .
-                </p>
+                </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          <Card className="bg-transparent border-transparent">
-            <CardHeader>
-              <CardTitle className="text-2xl text-purple-400">Life</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
+          {/* Interests */}
+          <div className="mb-6">
+            <div className="text-[#7db46c] text-sm sm:text-base">
+              thomas@portfolio:~$ cat life/interests.txt
+            </div>
+            <div className="mt-2 pl-2 sm:pl-4 border-l-2 border-[#404040] space-y-4 text-sm sm:text-base">
               <div>
-                <h3 className="font-semibold text-purple-300">
-                  Community Gardener
-                </h3>
-                <p className="mt-2 text-purple-200">
+                <div className="text-[#d4af37]">▶ Community Gardener</div>
+                <div className="text-[#7db46c] mt-2 leading-relaxed">
                   Passionate about sustainable urban agriculture and mutual aid.
                   Maintaining community gardens, organizing volunteer programs,
                   and sharing skills with local residents about regenerative
                   gardening practices. Contributing to food security initiatives
                   and environmental conservation efforts.
-                </p>
+                </div>
               </div>
-              <Separator className="bg-purple-500/30" />
+              <div className="text-[#404040]">--------------------</div>
               <div>
-                <h3 className="font-semibold text-purple-300">Construction</h3>
-                <p className="mt-2 text-purple-200">
+                <div className="text-[#d4af37]">▶ Construction</div>
+                <div className="text-[#7db46c] mt-2 leading-relaxed">
                   My time in the Navy working construction sparked a lasting
                   passion for hands-on work. Today, I find immense joy in DIY
                   projects, home improvements, and helping friends with their
                   renovations. Working with my hands has become an essential
                   part of who I am.
-                </p>
+                </div>
               </div>
-            </CardContent>
-          </Card>
-        </section>
+            </div>
+          </div>
+
+          {/* Chat stream */}
+          {messages.length > 0 && (
+            <div className="mb-6 border-t border-[#404040] pt-4">
+              {messages.map((message) => (
+                <div key={message.id} className="mb-4">
+                  {message.type === "user" ? (
+                    <div className="text-sm sm:text-base leading-relaxed">
+                      <span className="text-[#7db46c]">user@portfolio:~$ </span>
+                      <span className="text-[#9aa0a6] whitespace-pre-wrap break-words">
+                        {message.content}
+                      </span>
+                    </div>
+                  ) : (
+                    <div>
+                      <div className="text-[#7db46c] text-sm sm:text-base mb-1">
+                        thomas@portfolio:~$
+                      </div>
+                      <div className="text-[#7db46c] whitespace-pre-wrap leading-relaxed text-sm sm:text-base pl-2 break-words">
+                        {message.content && message.content.length > 0 ? (
+                          message.content
+                        ) : isLoading &&
+                          messages[messages.length - 1]?.id === message.id ? (
+                          <span className="animate-pulse">Thinking...</span>
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Terminal prompt */}
+          <div className="mt-8 flex items-center w-full min-w-0">
+            <span className="text-[#7db46c] text-sm sm:text-base whitespace-nowrap mr-1">
+              user@portfolio:~$
+            </span>
+            <input
+              ref={inputRef}
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Ask about Thomas's experience..."
+              className="flex-1 bg-transparent text-[#9aa0a6] font-mono text-sm sm:text-base outline-none placeholder:text-[#5a5a5a] min-w-0"
+              disabled={isLoading}
+            />
+            <div className="w-2 h-5 bg-[#7db46c] animate-pulse ml-1 shrink-0" />
+          </div>
+          <div ref={terminalEndRef} />
+        </div>
       </div>
     </div>
   );
