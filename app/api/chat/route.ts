@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { buildAssistantDynamicContext } from '@/lib/context'
-import { listUserRepos, listRepoContents, getFileText } from '@/lib/github'
+import { Ollama } from 'ollama'
 
 const MODEL = process.env.OLLAMA_MODEL || 'gpt-oss:20b'
-const API_URL = process.env.OLLAMA_API_URL || 'https://ollama.com/api/chat'
+// Prefer direct host for SDK; derive from OLLAMA_API_URL when provided
+const OLLAMA_HOST = process.env.OLLAMA_HOST
+  || (process.env.OLLAMA_API_URL ? process.env.OLLAMA_API_URL.replace(/\/api\/chat\/?$/i, '') : 'https://ollama.com')
 
 // Opt-in verbose logging without leaking secrets
 const DEBUG = String(process.env.DEBUG_CHAT_API).toLowerCase() === 'true' || process.env.DEBUG_CHAT_API === '1'
@@ -74,321 +76,81 @@ export async function POST(req: NextRequest) {
     if (!message) {
       return NextResponse.json({ error: 'Message is required' }, { status: 400 })
     }
-    // Ensure API_URL points to the chat endpoint
-    if (!/\/api\/chat(\/?|$)/i.test(API_URL)) {
-      safe.error('Invalid API_URL', { API_URL })
-      return NextResponse.json({
-        error: `Invalid OLLAMA_API_URL: ${API_URL}. It must point to <host>/api/chat (e.g., http://localhost:11434/api/chat).`
-      }, { status: 500 })
-    }
+    // Initialize Ollama SDK client
+    const ollama = new Ollama({
+      host: OLLAMA_HOST,
+      headers: process.env.OLLAMA_API_KEY ? { Authorization: `Bearer ${process.env.OLLAMA_API_KEY}` } : undefined
+    })
 
     const dynamicContext = await buildAssistantDynamicContext()
-
     // Construct chat history (if any)
     const hist = Array.isArray(history) ? (history as Array<{ role: string; content: string }>) : []
-    const owner = 'tmickleydoyle'
-
-    // Tool specifications for the model (OpenAI-style function tools)
-    const TOOLS = [
-      {
-        type: 'function',
-        function: {
-          name: 'list_user_repos',
-          description: 'List recent GitHub repositories for a user.',
-          parameters: {
-            type: 'object',
-            properties: {
-              user: { type: 'string', description: 'GitHub username. Defaults to tmickleydoyle.' },
-              limit: { type: 'number', description: 'Max repos to return (1-100). Default 30.' }
-            },
-            required: []
-          }
-        }
-      },
-      {
-        type: 'function',
-        function: {
-          name: 'list_repo_contents',
-          description: 'List files and folders in a GitHub repository at an optional path.',
-          parameters: {
-            type: 'object',
-            properties: {
-              owner: { type: 'string', description: 'Repo owner. Defaults to tmickleydoyle.' },
-              repo: { type: 'string', description: 'Repository name.' },
-              path: { type: 'string', description: 'Optional folder path. Default root.' }
-            },
-            required: ['repo']
-          }
-        }
-      },
-      {
-        type: 'function',
-        function: {
-          name: 'get_file_text',
-          description: 'Fetch the text content of a file in a GitHub repository. If repo is omitted, the server will try to infer it from recent context.',
-          parameters: {
-            type: 'object',
-            properties: {
-              owner: { type: 'string', description: 'Repo owner. Defaults to tmickleydoyle.' },
-              repo: { type: 'string', description: 'Repository name (optional; inferred from context when missing).' },
-              path: { type: 'string', description: 'File path within the repository.' }
-            },
-            required: ['path']
-          }
-        }
-      }
-    ] as const
-
-    // Helper to infer a repo name mentioned in conversation for ambiguous tool args
-    const inferRepoName = async (): Promise<string | undefined> => {
-      try {
-        const repos = await listUserRepos(owner, 50)
-        const candidates = repos.map(r => r.name.toLowerCase())
-        const corpus = `${hist.map(h => h.content).join('\n').toLowerCase()}\n${String(message).toLowerCase()}`
-        let best: { name?: string; idx: number } = { idx: -1 }
-        for (const name of candidates) {
-          const idx = corpus.lastIndexOf(name)
-          if (idx > best.idx) best = { name, idx }
-        }
-        return best.name
-      } catch {
-        return undefined
-      }
-    }
-
-    type ToolCall = { id?: string; type?: string; function?: { name: string; arguments?: string } }
-
-    const executeTool = async (call: ToolCall): Promise<string> => {
-      const fn = call?.function
-      if (!fn?.name) return 'Tool error: missing function name.'
-      const args = (() => { try { return fn.arguments ? JSON.parse(fn.arguments) : {} } catch { return {} } })()
-      switch (fn.name) {
-        case 'list_user_repos': {
-          const user = typeof args.user === 'string' && args.user.trim() ? args.user.trim() : owner
-          let limit = typeof args.limit === 'number' ? args.limit : 30
-          if (!Number.isFinite(limit) || limit < 1) limit = 30
-          if (limit > 100) limit = 100
-          const repos = await listUserRepos(user, limit)
-          const lines = repos.map(r => `- ${r.name}${r.language ? ` (${r.language})` : ''}${r.description ? ` — ${r.description}` : ''}`)
-          return ['Recent repositories:', ...lines].join('\n')
-        }
-        case 'list_repo_contents': {
-          let repo = String(args.repo || '').trim()
-          if (!repo) {
-            const inferred = await inferRepoName()
-            if (inferred) repo = inferred
-          }
-          if (!repo) return 'Error: repo is required (try specifying it or mention it in context).'
-          const repoOwner = String(args.owner || owner)
-          const path = String(args.path || '')
-          const items = await listRepoContents(repoOwner, repo, path)
-          const lines = items.map(i => `${i.type === 'dir' ? '📁' : '📄'} ${i.path}`)
-          return [`Contents of ${repoOwner}/${repo}${path ? '/' + path : ''}:`, ...lines].join('\n')
-        }
-        case 'get_file_text': {
-          let repo = String(args.repo || '').trim()
-          const repoOwner = String(args.owner || owner)
-          const path = String(args.path || '').trim()
-          if (!repo) {
-            const inferred = await inferRepoName()
-            if (inferred) repo = inferred
-          }
-          if (!repo || !path) return 'Error: repo and path are required (try specifying the repository or mention it in context).'
-          const text = await getFileText(repoOwner, repo, path)
-          return `File: ${repoOwner}/${repo}/${path}\n\n${text}`
-        }
-        default:
-          return `Tool error: unknown function ${fn.name}`
-      }
-    }
-
-  type ChatMsg = { role: string; content?: string; name?: string; tool_call_id?: string; tool_calls?: Array<{ id?: string; type?: string; function?: { name: string; arguments?: string } }> }
-  const baseMessages: ChatMsg[] = [
-      { role: 'system', content: `${SYSTEM_PROMPT}\n\n${dynamicContext}\n\nTOOLS AVAILABLE:\n- list_user_repos(user?, limit?)\n- list_repo_contents(owner?, repo, path?)\n- get_file_text(owner?, repo, path)\nUse tools when needed to answer precisely. If the repository is ambiguous, ask the user or infer from context.` },
-      ...(hist.length ? hist : [{ role: 'user', content: message }])
-  ]
-
-    // Agent loop: let the model call tools (non-stream), then stream the final answer
-  let msgs: Array<{ role: string; content?: string; name?: string; tool_call_id?: string; tool_calls?: ToolCall[] }> = [...baseMessages]
-    const maxIters = 3
+    // Compose messages for the Ollama SDK
+    const msgs: Array<{ role: 'system' | 'user' | 'assistant'; content: string }> = [
+      { role: 'system', content: `${SYSTEM_PROMPT}\n\n${dynamicContext}` },
+      ...(
+        hist.length
+          ? hist.map(h => ({
+              role: (h.role === 'assistant' || h.role === 'user' || h.role === 'system') ? (h.role as 'assistant'|'user'|'system') : 'user',
+              content: h.content
+            }))
+          : [{ role: 'user' as const, content: String(message) }]
+      )
+    ]
 
     // Log basic configuration (no secrets)
     safe.info('config', {
-      API_URL,
+      host: OLLAMA_HOST,
       MODEL,
       hasAuth: Boolean(process.env.OLLAMA_API_KEY),
       debug: DEBUG,
       initialMessages: msgs.length
     })
 
-    for (let iter = 0; iter < maxIters; iter++) {
-      const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 45000)
-      safe.info('request.chat', {
-        iter,
-        messages: msgs.length,
-        lastRole: msgs[msgs.length - 1]?.role,
-        tool_choice: 'auto'
-      })
-      const httpRes = await fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'User-Agent': 'Mozilla/5.0 (compatible; NextJS-Vercel)',
-          ...(process.env.OLLAMA_API_KEY ? { 'Authorization': `Bearer ${process.env.OLLAMA_API_KEY}` } : {})
-        },
-        signal: controller.signal,
-        body: JSON.stringify({
-          model: MODEL,
-          messages: msgs,
-          tools: TOOLS,
-          tool_choice: 'auto',
-          options: { temperature: 0.7, top_p: 0.9, num_ctx: 128000 },
-          stream: false
-        })
-      })
-      clearTimeout(timeoutId)
-
-      if (!httpRes.ok) {
-        const text = await httpRes.text().catch(() => '')
-        console.error(`Ollama API error - Status: ${httpRes.status}, Response: ${text}`)
-        safe.error('response.chat.error', { status: httpRes.status, statusText: httpRes.statusText, bodyPreview: String(text).slice(0, 500) })
-        return NextResponse.json({
-          error: `Remote Ollama API error: ${httpRes.status} ${httpRes.statusText}${text ? ` - ${text}` : ''}`
-        }, { status: httpRes.status })
-      }
-      const raw = await httpRes.json().catch(() => ({}))
-      const obj = raw as { message?: { content?: string; tool_calls?: ToolCall[] }; content?: string; response?: string; tool_calls?: ToolCall[] }
-      const assistantMsg = obj?.message
-      const toolCalls: ToolCall[] = assistantMsg?.tool_calls || obj?.tool_calls || []
-
-      safe.info('response.chat.ok', {
-        hasAssistantMsg: Boolean(assistantMsg),
-        toolCalls: toolCalls.length,
-        assistantPreview: (assistantMsg?.content ?? obj?.content ?? obj?.response ?? '')?.slice?.(0, 200) || ''
-      })
-
-      if (toolCalls.length > 0) {
-        // Append the assistant message containing tool_calls so tool results can reference call IDs
-        msgs = [...msgs, { role: 'assistant', content: assistantMsg?.content ?? '', tool_calls: toolCalls }]
-        // Execute tools and append their outputs
-        for (const call of toolCalls) {
-          try {
-            const result = await executeTool(call)
-            msgs = [...msgs, { role: 'tool', content: result, name: call.function?.name, tool_call_id: call.id }]
-          } catch (e: unknown) {
-            const errMsg = (e as { message?: string })?.message || 'Tool execution failed.'
-            msgs = [...msgs, { role: 'tool', content: `Error: ${errMsg}`, name: call.function?.name, tool_call_id: call.id }]
-          }
-        }
-        continue
-      }
-      // No tools requested; proceed to final streaming answer
-      break
-    }
-
-    // Final streaming answer using the accumulated messages (with any tool outputs)
-    const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), 45000)
+    // Stream final answer using the Ollama SDK
+    type OllamaStreamPart = { message?: { content?: string } ; content?: string; response?: string }
+    let streamIterator: AsyncIterable<OllamaStreamPart>
     safe.info('request.stream', { messages: msgs.length })
-    const httpRes = await fetch(API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'User-Agent': 'Mozilla/5.0 (compatible; NextJS-Vercel)',
-        ...(process.env.OLLAMA_API_KEY ? { 'Authorization': `Bearer ${process.env.OLLAMA_API_KEY}` } : {})
-      },
-      signal: controller.signal,
-      body: JSON.stringify({
+    try {
+      const response = await ollama.chat({
         model: MODEL,
-  messages: msgs,
-        options: { temperature: 0.7, top_p: 0.9, num_ctx: 128000 },
-        stream: true
+        messages: msgs,
+        stream: true,
+        options: { temperature: 0.7, top_p: 0.9, num_ctx: 128000 }
       })
-    })
-    clearTimeout(timeoutId)
-
-    if (!httpRes.ok) {
-      const text = await httpRes.text().catch(() => '')
-      console.error(`Ollama streaming API error - Status: ${httpRes.status}, Response: ${text}`)
-      safe.error('response.stream.error', { status: httpRes.status, statusText: httpRes.statusText, bodyPreview: String(text).slice(0, 500) })
-      return NextResponse.json({
-        error: `Remote Ollama API error: ${httpRes.status} ${httpRes.statusText}${text ? ` - ${text}` : ''}`
-      }, { status: httpRes.status })
+      // response is an AsyncIterable of chat parts
+      streamIterator = response as AsyncIterable<OllamaStreamPart>
+    } catch (e: unknown) {
+      const err = e as { message?: string }
+      safe.error('response.stream.error', { message: err?.message })
+      return NextResponse.json({ error: `Ollama API error: ${err?.message || 'unknown'}` }, { status: 502 })
     }
 
     const encoder = new TextEncoder()
-    const decoder = new TextDecoder()
-    const stream = new ReadableStream<Uint8Array>({
+  const stream = new ReadableStream<Uint8Array>({
       async start(controller) {
         try {
-          const reader = httpRes.body?.getReader()
-          if (!reader) { controller.close(); return }
-          let buffer = ''
           let wrote = false
           let loggedFirst = false
-             while (true) {
-            const { done, value } = await reader.read()
-            if (done) break
-            const chunk = decoder.decode(value, { stream: true })
-            buffer += chunk
-            let idx
-            while ((idx = buffer.indexOf('\n')) !== -1) {
-               let line = buffer.slice(0, idx).trim()
-              buffer = buffer.slice(idx + 1)
-              if (!line) continue
-                 if (line.startsWith('data:')) line = line.slice(5).trim()
-              try {
-                const o = JSON.parse(line) as { message?: { content?: string }, content?: string, response?: string }
-                const piece = o?.message?.content ?? o?.content ?? o?.response ?? ''
-                if (piece) {
-                  controller.enqueue(encoder.encode(piece));
-                  wrote = true
-                  if (DEBUG && !loggedFirst) {
-                    safe.info('stream.firstChunk', { length: piece.length, preview: piece.slice(0, 120) })
-                    loggedFirst = true
-                  }
-                }
-              } catch {}
-            }
-          }
-          const tail = buffer.trim()
-          if (tail) {
-            try {
-               const jsonTail = tail.startsWith('data:') ? tail.slice(5).trim() : tail
-               const o = JSON.parse(jsonTail) as { message?: { content?: string }, content?: string, response?: string }
-              const piece = o?.message?.content ?? o?.content ?? o?.response ?? ''
-              if (piece) {
-                controller.enqueue(encoder.encode(piece));
-                wrote = true
-                if (DEBUG && !loggedFirst) {
-                  safe.info('stream.tail', { length: piece.length, preview: piece.slice(0, 120) })
-                  loggedFirst = true
-                }
+          for await (const part of streamIterator) {
+            const piece = part?.message?.content ?? part?.content ?? part?.response ?? ''
+            if (piece) {
+              controller.enqueue(encoder.encode(piece))
+              if (!wrote && DEBUG && !loggedFirst) {
+                safe.info('stream.firstChunk', { length: piece.length, preview: piece.slice(0, 120) })
+                loggedFirst = true
               }
-            } catch {}
+              wrote = true
+            }
           }
           // Fallback: if nothing was streamed, try a non-stream request to get content
           if (!wrote) {
             try {
-              const fallbackRes = await fetch(API_URL, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'User-Agent': 'Mozilla/5.0 (compatible; NextJS-Vercel)',
-                  ...(process.env.OLLAMA_API_KEY ? { 'Authorization': `Bearer ${process.env.OLLAMA_API_KEY}` } : {})
-                },
-                body: JSON.stringify({ model: MODEL, messages: msgs, options: { temperature: 0.7, top_p: 0.9, num_ctx: 128000 }, stream: false })
-              })
-              if (fallbackRes.ok) {
-                const obj = await fallbackRes.json().catch(() => ({})) as { message?: { content?: string }, content?: string, response?: string }
-                const text = obj?.message?.content ?? obj?.content ?? obj?.response ?? ''
-                if (text) controller.enqueue(encoder.encode(text))
-                safe.info('fallback.response', { ok: fallbackRes.ok, status: fallbackRes.status, hasText: Boolean(text), preview: text.slice(0, 120) })
-              } else {
-                const t = await fallbackRes.text().catch(() => '')
-                safe.error('fallback.error', { status: fallbackRes.status, statusText: fallbackRes.statusText, bodyPreview: String(t).slice(0, 300) })
-              }
+              const obj = await ollama.chat({ model: MODEL, messages: msgs, stream: false, options: { temperature: 0.7, top_p: 0.9, num_ctx: 128000 } })
+              const anyObj = obj as unknown as { message?: { content?: string }; content?: string; response?: string }
+              const text = anyObj?.message?.content ?? anyObj?.content ?? anyObj?.response ?? ''
+              if (text) controller.enqueue(encoder.encode(text))
+              safe.info('fallback.response', { hasText: Boolean(text), preview: text.slice(0, 120) })
             } catch {}
           }
         } catch {
