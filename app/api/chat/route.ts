@@ -3,7 +3,14 @@ import { buildAssistantDynamicContext } from '@/lib/context'
 import { listUserRepos, listRepoContents, getFileText } from '@/lib/github'
 
 const MODEL = process.env.OLLAMA_MODEL || 'gpt-oss:20b'
-const API_URL = 'https://ollama.com/api/chat'
+const API_URL = process.env.OLLAMA_API_URL || 'https://ollama.com/api/chat'
+
+// Opt-in verbose logging without leaking secrets
+const DEBUG = String(process.env.DEBUG_CHAT_API).toLowerCase() === 'true' || process.env.DEBUG_CHAT_API === '1'
+const safe = {
+  info: (...args: unknown[]) => { if (DEBUG) console.log('[chat]', ...args) },
+  error: (...args: unknown[]) => console.error('[chat]', ...args)
+}
 
 const SYSTEM_PROMPT = `You are Thomas Mickley-Doyle's AI assistant embedded in his terminal portfolio website. You help visitors learn about Thomas's professional experience and background.
 
@@ -69,6 +76,7 @@ export async function POST(req: NextRequest) {
     }
     // Ensure API_URL points to the chat endpoint
     if (!/\/api\/chat(\/?|$)/i.test(API_URL)) {
+      safe.error('Invalid API_URL', { API_URL })
       return NextResponse.json({
         error: `Invalid OLLAMA_API_URL: ${API_URL}. It must point to <host>/api/chat (e.g., http://localhost:11434/api/chat).`
       }, { status: 500 })
@@ -204,10 +212,25 @@ export async function POST(req: NextRequest) {
   let msgs: Array<{ role: string; content?: string; name?: string; tool_call_id?: string; tool_calls?: ToolCall[] }> = [...baseMessages]
     const maxIters = 3
 
+    // Log basic configuration (no secrets)
+    safe.info('config', {
+      API_URL,
+      MODEL,
+      hasAuth: Boolean(process.env.OLLAMA_API_KEY),
+      debug: DEBUG,
+      initialMessages: msgs.length
+    })
+
     for (let iter = 0; iter < maxIters; iter++) {
       const controller = new AbortController()
       const timeoutId = setTimeout(() => controller.abort(), 45000)
-  const httpRes = await fetch(API_URL, {
+      safe.info('request.chat', {
+        iter,
+        messages: msgs.length,
+        lastRole: msgs[msgs.length - 1]?.role,
+        tool_choice: 'auto'
+      })
+      const httpRes = await fetch(API_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -229,6 +252,7 @@ export async function POST(req: NextRequest) {
       if (!httpRes.ok) {
         const text = await httpRes.text().catch(() => '')
         console.error(`Ollama API error - Status: ${httpRes.status}, Response: ${text}`)
+        safe.error('response.chat.error', { status: httpRes.status, statusText: httpRes.statusText, bodyPreview: String(text).slice(0, 500) })
         return NextResponse.json({
           error: `Remote Ollama API error: ${httpRes.status} ${httpRes.statusText}${text ? ` - ${text}` : ''}`
         }, { status: httpRes.status })
@@ -237,6 +261,12 @@ export async function POST(req: NextRequest) {
       const obj = raw as { message?: { content?: string; tool_calls?: ToolCall[] }; content?: string; response?: string; tool_calls?: ToolCall[] }
       const assistantMsg = obj?.message
       const toolCalls: ToolCall[] = assistantMsg?.tool_calls || obj?.tool_calls || []
+
+      safe.info('response.chat.ok', {
+        hasAssistantMsg: Boolean(assistantMsg),
+        toolCalls: toolCalls.length,
+        assistantPreview: (assistantMsg?.content ?? obj?.content ?? obj?.response ?? '')?.slice?.(0, 200) || ''
+      })
 
       if (toolCalls.length > 0) {
         // Append the assistant message containing tool_calls so tool results can reference call IDs
@@ -260,7 +290,8 @@ export async function POST(req: NextRequest) {
     // Final streaming answer using the accumulated messages (with any tool outputs)
     const controller = new AbortController()
     const timeoutId = setTimeout(() => controller.abort(), 45000)
-  const httpRes = await fetch(API_URL, {
+    safe.info('request.stream', { messages: msgs.length })
+    const httpRes = await fetch(API_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -280,6 +311,7 @@ export async function POST(req: NextRequest) {
     if (!httpRes.ok) {
       const text = await httpRes.text().catch(() => '')
       console.error(`Ollama streaming API error - Status: ${httpRes.status}, Response: ${text}`)
+      safe.error('response.stream.error', { status: httpRes.status, statusText: httpRes.statusText, bodyPreview: String(text).slice(0, 500) })
       return NextResponse.json({
         error: `Remote Ollama API error: ${httpRes.status} ${httpRes.statusText}${text ? ` - ${text}` : ''}`
       }, { status: httpRes.status })
@@ -294,6 +326,7 @@ export async function POST(req: NextRequest) {
           if (!reader) { controller.close(); return }
           let buffer = ''
           let wrote = false
+          let loggedFirst = false
              while (true) {
             const { done, value } = await reader.read()
             if (done) break
@@ -308,7 +341,14 @@ export async function POST(req: NextRequest) {
               try {
                 const o = JSON.parse(line) as { message?: { content?: string }, content?: string, response?: string }
                 const piece = o?.message?.content ?? o?.content ?? o?.response ?? ''
-                if (piece) { controller.enqueue(encoder.encode(piece)); wrote = true }
+                if (piece) {
+                  controller.enqueue(encoder.encode(piece));
+                  wrote = true
+                  if (DEBUG && !loggedFirst) {
+                    safe.info('stream.firstChunk', { length: piece.length, preview: piece.slice(0, 120) })
+                    loggedFirst = true
+                  }
+                }
               } catch {}
             }
           }
@@ -318,7 +358,14 @@ export async function POST(req: NextRequest) {
                const jsonTail = tail.startsWith('data:') ? tail.slice(5).trim() : tail
                const o = JSON.parse(jsonTail) as { message?: { content?: string }, content?: string, response?: string }
               const piece = o?.message?.content ?? o?.content ?? o?.response ?? ''
-              if (piece) { controller.enqueue(encoder.encode(piece)); wrote = true }
+              if (piece) {
+                controller.enqueue(encoder.encode(piece));
+                wrote = true
+                if (DEBUG && !loggedFirst) {
+                  safe.info('stream.tail', { length: piece.length, preview: piece.slice(0, 120) })
+                  loggedFirst = true
+                }
+              }
             } catch {}
           }
           // Fallback: if nothing was streamed, try a non-stream request to get content
@@ -337,6 +384,10 @@ export async function POST(req: NextRequest) {
                 const obj = await fallbackRes.json().catch(() => ({})) as { message?: { content?: string }, content?: string, response?: string }
                 const text = obj?.message?.content ?? obj?.content ?? obj?.response ?? ''
                 if (text) controller.enqueue(encoder.encode(text))
+                safe.info('fallback.response', { ok: fallbackRes.ok, status: fallbackRes.status, hasText: Boolean(text), preview: text.slice(0, 120) })
+              } else {
+                const t = await fallbackRes.text().catch(() => '')
+                safe.error('fallback.error', { status: fallbackRes.status, statusText: fallbackRes.statusText, bodyPreview: String(t).slice(0, 300) })
               }
             } catch {}
           }
