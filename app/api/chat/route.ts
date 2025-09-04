@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { buildAssistantDynamicContext } from '@/lib/context'
 import { listUserRepos, listRepoContents, getFileText } from '@/lib/github'
 
-const API_URL = process.env.OLLAMA_API_URL || 'http://localhost:11434/api/chat'
 const MODEL = process.env.OLLAMA_MODEL || 'gpt-oss:20b'
+const API_URL = 'https://ollama.com/api/chat'
 
 const SYSTEM_PROMPT = `You are Thomas Mickley-Doyle's AI assistant embedded in his terminal portfolio website. You help visitors learn about Thomas's professional experience and background.
 
