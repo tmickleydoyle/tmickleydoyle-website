@@ -41,7 +41,7 @@ export function Portfolio() {
     const currentInput = input;
     setInput("");
     setIsLoading(true);
-    
+
     try {
       const history = [...messages, userMessage].map((m) => ({
         role: m.type === "assistant" ? "assistant" : "user",
@@ -91,18 +91,20 @@ export function Portfolio() {
         const { done, value } = await reader.read();
         if (done) break;
         const chunk = decoder.decode(value, { stream: true });
-        
+
         // Split chunk into lines and parse each JSON object
-        const lines = chunk.split('\n').filter(line => line.trim());
-        
+        const lines = chunk.split("\n").filter((line) => line.trim());
+
         for (const line of lines) {
           try {
             const data = JSON.parse(line);
-            const content = data?.message?.content || '';
+            const content = data?.message?.content || "";
             if (content) {
               setMessages((prev) =>
                 prev.map((m) =>
-                  m.id === assistantId ? { ...m, content: m.content + content } : m
+                  m.id === assistantId
+                    ? { ...m, content: m.content + content }
+                    : m
                 )
               );
             }
@@ -119,7 +121,9 @@ export function Portfolio() {
         {
           id: assistantId,
           type: "assistant",
-          content: `Error: ${(error as Error)?.message || 'Could not connect to Ollama service'}`,
+          content: `Error: ${
+            (error as Error)?.message || "Could not connect to Ollama service"
+          }`,
           timestamp: new Date(),
         },
       ]);
@@ -158,7 +162,8 @@ export function Portfolio() {
             </div>
             <div className="text-[#7db46c] mb-4">
               <div className="mt-4">
-                <span className="text-[#d4af37]">NAME:</span> Thomas Mickley-Doyle
+                <span className="text-[#d4af37]">NAME:</span> Thomas
+                Mickley-Doyle
               </div>
               <div className="mt-2">
                 <span className="text-[#d4af37]">STATUS:</span> Online -
@@ -182,7 +187,7 @@ export function Portfolio() {
                   href="https://www.linkedin.com/in/thomas-mickley-doyle/"
                   className="text-[#87ceeb] hover:text-[#d4af37] transition-colors"
                 >
-                  [linkedin] → thomas-doyle
+                  [linkedin] → thomas-mickley-doyle
                 </Link>
               </div>
               <div className="flex gap-4">
@@ -216,11 +221,11 @@ export function Portfolio() {
               <div>
                 <div className="text-[#d4af37]">▶ ML Engineering</div>
                 <div className="text-[#7db46c] mt-2 leading-relaxed">
-                  Building fine-tuned language models to enhance user experience through patterned responses
-                  without overwhelming them with text. Focused on fine-tuning
-                  models for SQL onboarding to empower co-workers in data
-                  exploration. Creating intelligent solutions
-                  that streamline learning processes and improve data
+                  Building fine-tuned language models to enhance user experience
+                  through patterned responses without overwhelming them with
+                  text. Focused on fine-tuning models for SQL onboarding to
+                  empower co-workers in data exploration. Creating intelligent
+                  solutions that streamline learning processes and improve data
                   accessibility across teams with a variety of ML applications.
                 </div>
               </div>
@@ -228,11 +233,12 @@ export function Portfolio() {
               <div>
                 <div className="text-[#d4af37]">▶ Data Platform Design</div>
                 <div className="text-[#7db46c] mt-2 leading-relaxed">
-                  Designing intuitive data solutions that drive product-led growth by working cross-collaboratively
-                  with product, engineering, and business teams. Focusing on
-                  simplifying data processing, storage, and analytics adoption
-                  across teams. Creating seamless data platforms that enable
-                  rapid product iteration and data-driven decision making.
+                  Designing intuitive data solutions that drive product-led
+                  growth by working cross-collaboratively with product,
+                  engineering, and business teams. Focusing on simplifying data
+                  processing, storage, and analytics adoption across teams.
+                  Creating seamless data platforms that enable rapid product
+                  iteration and data-driven decision making.
                 </div>
               </div>
               <div className="text-[#404040]">--------------------</div>
@@ -240,9 +246,9 @@ export function Portfolio() {
                 <div className="text-[#d4af37]">▶ Data Engineering</div>
                 <div className="text-[#7db46c] mt-2 leading-relaxed">
                   Architecting and implementing robust data systems, focusing on
-                  scalability and performance. Developing data pipelines, analytics tools, and machine
-                  learning models to drive product improvements and business
-                  insights.
+                  scalability and performance. Developing data pipelines,
+                  analytics tools, and machine learning models to drive product
+                  improvements and business insights.
                 </div>
               </div>
               <div className="text-[#404040]">--------------------</div>
@@ -253,8 +259,8 @@ export function Portfolio() {
                 <div className="text-[#7db46c] mt-2 leading-relaxed">
                   Applying advanced statistical methods and machine learning
                   techniques to solve complex business problems. Translating
-                  data insights into actionable strategies,
-                  enhancing product features and user experiences.
+                  data insights into actionable strategies, enhancing product
+                  features and user experiences.
                 </div>
               </div>
             </div>
