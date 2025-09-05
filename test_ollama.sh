@@ -13,7 +13,7 @@ fi
 URL="${OLLAMA_API_URL:-}"
 MODEL="${OLLAMA_MODEL:-llama3}"
 KEY_PRESENT="absent"
-[ -n "${OLLAMA_API_KEY:-}" ] && KEY_PRESENT="present"
+[ -n "${NEXT_PUBLIC_OLLAMA_API_KEY:-}" ] && KEY_PRESENT="present"
 
 if [ -z "$URL" ]; then
   echo "OLLAMA_API_URL is empty after loading .env.local" >&2
@@ -29,7 +29,7 @@ DATA=$(printf '{"model":"%s","messages":[{"role":"user","content":"ping"}],"stre
 HTTP_CODE=$(curl -sS -o /tmp/ollama_ping_body.$$ -w "%{http_code}" \
   -X POST "$URL" \
   -H 'Content-Type: application/json' \
-  ${OLLAMA_API_KEY:+-H "Authorization: Bearer $OLLAMA_API_KEY"} \
+  ${NEXT_PUBLIC_OLLAMA_API_KEY:+-H "Authorization: Bearer $NEXT_PUBLIC_OLLAMA_API_KEY"} \
   -d "$DATA")
 
 echo "-> HTTP: $HTTP_CODE"

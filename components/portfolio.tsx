@@ -41,6 +41,7 @@ export function Portfolio() {
     const currentInput = input;
     setInput("");
     setIsLoading(true);
+    
     try {
       const history = [...messages, userMessage].map((m) => ({
         role: m.type === "assistant" ? "assistant" : "user",
@@ -90,21 +91,35 @@ export function Portfolio() {
         const { done, value } = await reader.read();
         if (done) break;
         const chunk = decoder.decode(value, { stream: true });
-        if (chunk) {
-          setMessages((prev) =>
-            prev.map((m) =>
-              m.id === assistantId ? { ...m, content: m.content + chunk } : m
-            )
-          );
+        
+        // Split chunk into lines and parse each JSON object
+        const lines = chunk.split('\n').filter(line => line.trim());
+        
+        for (const line of lines) {
+          try {
+            const data = JSON.parse(line);
+            const content = data?.message?.content || '';
+            if (content) {
+              setMessages((prev) =>
+                prev.map((m) =>
+                  m.id === assistantId ? { ...m, content: m.content + content } : m
+                )
+              );
+            }
+          } catch {
+            // Skip invalid JSON lines
+            continue;
+          }
         }
       }
-    } catch {
+    } catch (error: unknown) {
+      const assistantId = (Date.now() + 1).toString();
       setMessages((prev) => [
         ...prev,
         {
-          id: `${Date.now() + 1}`,
+          id: assistantId,
           type: "assistant",
-          content: "Error: Could not connect to the chat service",
+          content: `Error: ${(error as Error)?.message || 'Could not connect to Ollama service'}`,
           timestamp: new Date(),
         },
       ]);
