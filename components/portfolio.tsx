@@ -356,10 +356,9 @@ export function Portfolio() {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Ask about Thomas's experience..."
-              className="flex-1 bg-transparent text-[#9aa0a6] font-mono text-sm sm:text-base outline-none placeholder:text-[#5a5a5a] min-w-0"
+              className="flex-1 bg-transparent text-[#9aa0a6] font-mono text-sm sm:text-base outline-none placeholder:text-[#5a5a5a] min-w-0 caret-[#7db46c]"
               disabled={isLoading}
             />
-            <div className="w-2 h-5 bg-[#7db46c] animate-pulse ml-1 shrink-0" />
           </div>
           <div ref={terminalEndRef} />
         </div>

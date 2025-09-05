@@ -4,8 +4,7 @@ import { Ollama } from 'ollama'
 
 const MODEL = process.env.OLLAMA_MODEL || 'gpt-oss:20b'
 // Prefer direct host for SDK; derive from OLLAMA_API_URL when provided
-const OLLAMA_HOST = process.env.OLLAMA_HOST
-  || (process.env.OLLAMA_API_URL ? process.env.OLLAMA_API_URL.replace(/\/api\/chat\/?$/i, '') : 'https://ollama.com')
+const OLLAMA_HOST = 'https://ollama.com'
 
 // Opt-in verbose logging without leaking secrets
 const DEBUG = String(process.env.DEBUG_CHAT_API).toLowerCase() === 'true' || process.env.DEBUG_CHAT_API === '1'
@@ -14,9 +13,9 @@ const safe = {
   error: (...args: unknown[]) => console.error('[chat]', ...args)
 }
 
-const SYSTEM_PROMPT = `You are Thomas Mickley-Doyle's AI assistant embedded in his terminal portfolio website. You help visitors learn about Thomas's professional experience and background.
+const SYSTEM_PROMPT = `You are Thomas Doyle's AI assistant embedded in his terminal portfolio website. You help visitors learn about Thomas's professional experience and background.
 
-THOMAS MICKLEY-DOYLE PROFILE:
+THOMAS DOYLE PROFILE:
 
 LOCATION: Ithaca, New York, USA - Remote
 
