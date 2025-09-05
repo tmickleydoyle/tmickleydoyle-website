@@ -158,7 +158,7 @@ export function Portfolio() {
             </div>
             <div className="text-[#7db46c] mb-4">
               <div className="mt-4">
-                <span className="text-[#d4af37]">NAME:</span> Thomas Doyle
+                <span className="text-[#d4af37]">NAME:</span> Thomas Mickley-Doyle
               </div>
               <div className="mt-2">
                 <span className="text-[#d4af37]">STATUS:</span> Online -
@@ -216,22 +216,10 @@ export function Portfolio() {
               <div>
                 <div className="text-[#d4af37]">▶ ML Engineering</div>
                 <div className="text-[#7db46c] mt-2 leading-relaxed">
-                  Building fine-tuned language models to{" "}
-                  <Link
-                    href="https://tmickleydoyle-chat.vercel.app"
-                    className="text-[#87ceeb] hover:text-[#d4af37] underline transition-colors"
-                  >
-                    enhance user experience through patterned responses
-                  </Link>{" "}
+                  Building fine-tuned language models to enhance user experience through patterned responses
                   without overwhelming them with text. Focused on fine-tuning
                   models for SQL onboarding to empower co-workers in data
-                  exploration.{" "}
-                  <Link
-                    href="https://github.com/tmickleydoyle/documents/blob/main/Chatbot_Experience_Healthcare.md"
-                    className="text-[#87ceeb] hover:text-[#d4af37] underline transition-colors"
-                  >
-                    Creating intelligent solutions
-                  </Link>{" "}
+                  exploration. Creating intelligent solutions
                   that streamline learning processes and improve data
                   accessibility across teams with a variety of ML applications.
                 </div>
@@ -240,20 +228,9 @@ export function Portfolio() {
               <div>
                 <div className="text-[#d4af37]">▶ Data Platform Design</div>
                 <div className="text-[#7db46c] mt-2 leading-relaxed">
-                  Designing intuitive data solutions that{" "}
-                  <Link
-                    href="https://github.com/tmickleydoyle/documents/blob/main/Prioritizing_Projects.md"
-                    className="text-[#87ceeb] hover:text-[#d4af37] underline transition-colors"
-                  >
-                    drive product-led growth by working cross-collaboratively
-                  </Link>{" "}
-                  with product, engineering, and business teams. Focusing on{" "}
-                  <Link
-                    href="https://page-view-ab-stats.vercel.app"
-                    className="text-[#87ceeb] hover:text-[#d4af37] underline transition-colors"
-                  >
-                    simplifying data processing, storage, and analytics adoption
-                  </Link>{" "}
+                  Designing intuitive data solutions that drive product-led growth by working cross-collaboratively
+                  with product, engineering, and business teams. Focusing on
+                  simplifying data processing, storage, and analytics adoption
                   across teams. Creating seamless data platforms that enable
                   rapid product iteration and data-driven decision making.
                 </div>
@@ -262,14 +239,8 @@ export function Portfolio() {
               <div>
                 <div className="text-[#d4af37]">▶ Data Engineering</div>
                 <div className="text-[#7db46c] mt-2 leading-relaxed">
-                  Architecting and implementing robust data systems, focusing on{" "}
-                  <Link
-                    href="https://github.com/tmickleydoyle/documents/blob/main/Fork_Sharing_Data_Across_Stores.md"
-                    className="text-[#87ceeb] hover:text-[#d4af37] underline transition-colors"
-                  >
-                    scalability and performance
-                  </Link>
-                  . Developing data pipelines, analytics tools, and machine
+                  Architecting and implementing robust data systems, focusing on
+                  scalability and performance. Developing data pipelines, analytics tools, and machine
                   learning models to drive product improvements and business
                   insights.
                 </div>
@@ -282,14 +253,8 @@ export function Portfolio() {
                 <div className="text-[#7db46c] mt-2 leading-relaxed">
                   Applying advanced statistical methods and machine learning
                   techniques to solve complex business problems. Translating
-                  data insights into actionable strategies,{" "}
-                  <Link
-                    href="https://github.com/tmickleydoyle/documents/blob/main/Monstera_Company_Metric_Design.md"
-                    className="text-[#87ceeb] hover:text-[#d4af37] underline transition-colors"
-                  >
-                    enhancing product features and user experiences
-                  </Link>
-                  .
+                  data insights into actionable strategies,
+                  enhancing product features and user experiences.
                 </div>
               </div>
             </div>

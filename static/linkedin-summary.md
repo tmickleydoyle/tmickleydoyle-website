@@ -1,4 +1,4 @@
-# Thomas Doyle - Professional Experience & Employment History
+# Thomas Mickley-Doyle - Professional Experience & Employment History
 
 ## Current Position
 **Builder - Projects**  

@@ -13,9 +13,9 @@ export async function POST(req: NextRequest) {
     const MODEL = process.env.NEXT_PUBLIC_OLLAMA_API_KEY_MODEL || 'gpt-oss:20b'
     const API_KEY = process.env.NEXT_NEXT_PUBLIC_OLLAMA_API_KEY
 
-    const systemPrompt = `You are Thomas Doyle's AI assistant embedded in his terminal portfolio website. You help visitors learn about Thomas's professional experience and background.
+    const systemPrompt = `You are Thomas Mickley-Doyle's AI assistant embedded in his terminal portfolio website. You help visitors learn about Thomas's professional experience and background.
 
-THOMAS DOYLE PROFILE:
+THOMAS MICKLEY-DOYLE PROFILE:
 LOCATION: Ithaca, New York, USA - Remote
 
 WORK EXPERIENCE:

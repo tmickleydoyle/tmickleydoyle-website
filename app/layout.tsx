@@ -14,7 +14,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Thomas Doyle",
+  title: "Thomas Mickley-Doyle",
   description: "Made with ❤️",
 };
 
