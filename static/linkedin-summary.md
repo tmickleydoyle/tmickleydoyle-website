@@ -1,17 +1,20 @@
 # Thomas Mickley-Doyle - Professional Experience & Employment History
 
 ## Current Position
+
+**Data Engineer - Stackblitz** 
+*July 2025 - Present* 
+
+## Previous Experience
+
 **Builder - Projects**  
-*Mar 2025 - Present (7 months)*  
+*Feb 2025 - July 2025 (7 months)*  
 - Conjuring a language model from scratch (yes, on my humble local machine!)
 - Diving into attention heads, and wow, they're like tiny wizards of context!
 - Crafting a web scraper and domain-mapping tool to tame millions of domains
 - Building a code scraper that scales heroically to millions of repositories
 - Learning about all sorts of language model sorcery and experiments
 - Architecting systems to wrangle product and marketing metrics into insights
-- Working on the data team at Stackblitz!
-
-## Previous Experience
 
 **Lead, Data Platform - Vercel**  
 *Jan 2022 - Feb 2025 (3 years 2 months)*  
