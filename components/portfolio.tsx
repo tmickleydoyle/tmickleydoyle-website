@@ -17,12 +17,18 @@ export function Portfolio() {
   const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const terminalEndRef = useRef<HTMLDivElement>(null);
+  const terminalContainerRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () =>
     terminalEndRef.current?.scrollIntoView({ behavior: "smooth" });
 
   const scrollToTop = () => {
+    // Scroll the window to top
     window.scrollTo({ top: 0, behavior: "instant" });
+    // Also scroll the terminal container to top
+    if (terminalContainerRef.current) {
+      terminalContainerRef.current.scrollTop = 0;
+    }
   };
 
   useEffect(() => {
@@ -31,7 +37,11 @@ export function Portfolio() {
 
   useEffect(() => {
     inputRef.current?.focus();
-    scrollToTop(); // Ensure page starts at the top
+    // Use a timeout to ensure the DOM is fully rendered before scrolling
+    const timeoutId = setTimeout(() => {
+      scrollToTop();
+    }, 0);
+    return () => clearTimeout(timeoutId);
   }, []);
 
   const sendMessage = async () => {
@@ -159,7 +169,7 @@ export function Portfolio() {
           </span>
         </div>
 
-        <div className="bg-[#0c0c0c] border-x border-b border-[#404040] rounded-b-lg p-3 sm:p-6 min-h-[400px] sm:min-h-[600px] overflow-x-auto max-h-[80vh] overflow-y-auto">
+        <div ref={terminalContainerRef} className="bg-[#0c0c0c] border-x border-b border-[#404040] rounded-b-lg p-3 sm:p-6 min-h-[400px] sm:min-h-[600px] overflow-x-auto max-h-[80vh] overflow-y-auto">
           {/* Whoami */}
           <div className="mb-6">
             <div className="text-[#7db46c] text-sm sm:text-base">
