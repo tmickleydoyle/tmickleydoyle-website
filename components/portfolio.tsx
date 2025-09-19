@@ -37,11 +37,21 @@ export function Portfolio() {
 
   useEffect(() => {
     inputRef.current?.focus();
-    // Use a timeout to ensure the DOM is fully rendered before scrolling
-    const timeoutId = setTimeout(() => {
-      scrollToTop();
-    }, 0);
-    return () => clearTimeout(timeoutId);
+    
+    // Immediate scroll
+    scrollToTop();
+    
+    // Backup scroll with multiple timeouts to ensure it works
+    const timeouts = [
+      setTimeout(() => scrollToTop(), 0),
+      setTimeout(() => scrollToTop(), 10),
+      setTimeout(() => scrollToTop(), 50),
+      setTimeout(() => scrollToTop(), 100)
+    ];
+    
+    return () => {
+      timeouts.forEach(clearTimeout);
+    };
   }, []);
 
   const sendMessage = async () => {
