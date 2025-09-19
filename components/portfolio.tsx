@@ -21,12 +21,17 @@ export function Portfolio() {
   const scrollToBottom = () =>
     terminalEndRef.current?.scrollIntoView({ behavior: "smooth" });
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  };
+
   useEffect(() => {
     if (messages.length) scrollToBottom();
   }, [messages]);
 
   useEffect(() => {
     inputRef.current?.focus();
+    scrollToTop(); // Ensure page starts at the top
   }, []);
 
   const sendMessage = async () => {
