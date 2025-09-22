@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
     }
 
     const OLLAMA_API_URL = process.env.NEXT_PUBLIC_OLLAMA_API_KEY_API_URL || 'https://ollama.com/api/chat'
-    const MODEL = process.env.NEXT_PUBLIC_OLLAMA_API_KEY_MODEL || 'gpt-oss:20b'
+    const MODEL = 'gpt-oss:20b-cloud'
     const API_KEY = process.env.NEXT_NEXT_PUBLIC_OLLAMA_API_KEY
 
     const systemPrompt = `You are Thomas Mickley-Doyle's AI assistant embedded in his terminal portfolio website. You help visitors learn about Thomas's professional experience and background.
