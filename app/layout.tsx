@@ -15,7 +15,8 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "Thomas Mickley-Doyle",
-  description: "Made with ❤️",
+  description:
+    "Navy Seabee turned teacher turned data leader. I manage the data team at StackBlitz and train small language models for fun.",
 };
 
 export default function RootLayout({

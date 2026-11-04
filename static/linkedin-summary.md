@@ -2,8 +2,24 @@
 
 ## Current Position
 
-**Data Engineer - Stackblitz** 
-*July 2025 - Present* 
+**Data Team Manager - StackBlitz**  
+*July 2025 - Present*  
+- Joined as a Data Engineer; now manages the data team
+
+## Current Side Projects (public on GitHub)
+- **tiny-research**: 95 controlled 5-minute training runs on a single RTX 4090; the winning 34M-parameter autocomplete model runs entirely in the browser
+- **agentic-coding-rl**: incremental RL environment for building toward an agentic coding model (tasks, sandbox, verifiable rewards, GRPO/RLOO training)
+- **zidane-agent-flow**: extension for the zidane agent that visualizes how the agent works live as a tree, timeline, and graph
+- **is-agent-running**: Swift app for checking whether coding agents are still running
+- **fill-in-the-middle**: fine-tuning Qwen3-8B on code completion with fill-in-the-middle training
+- **code-labeler**, **github-repo-crawler**: tooling for collecting and labeling code data
+- Older favorites: **shallow-explore** (explore CSVs from the command line, Go), **moonwalk** (walk a directory toward root, Go), **github-collaboration-network** (social network analysis of GitHub collaboration)
+
+## Personal
+- Lives in Ithaca, New York; works remotely
+- Community gardener: sustainable urban agriculture, mutual aid, organizing volunteers
+- Loves hands-on work from his Seabee days: DIY, home improvement, helping friends renovate
+- Teaching background shapes his leadership: explain plainly, meet people where they are
 
 ## Previous Experience
 

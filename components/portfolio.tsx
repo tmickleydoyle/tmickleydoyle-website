@@ -1,7 +1,9 @@
 "use client";
 
 import { Terminal } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
+import profileImage from "@/static/images/profile_image.png";
 import { useEffect, useRef, useState } from "react";
 
 interface ChatMessage {
@@ -185,15 +187,41 @@ export function Portfolio() {
             <div className="text-[#7db46c] text-sm sm:text-base">
               thomas@portfolio:~$ whoami
             </div>
-            <div className="text-[#7db46c] mb-4">
-              <div className="mt-4">
-                <span className="text-[#d4af37]">NAME:</span> Thomas
-                Mickley-Doyle
+            <div className="text-[#7db46c] mb-4 mt-4 flex flex-col sm:flex-row gap-4 sm:items-center">
+              <Image
+                src={profileImage}
+                alt="Thomas Mickley-Doyle"
+                width={96}
+                height={96}
+                priority
+                className="rounded-md border border-[#404040] grayscale-[30%] w-20 h-20 sm:w-24 sm:h-24 object-cover"
+              />
+              <div>
+                <div>
+                  <span className="text-[#d4af37]">NAME:</span> Thomas
+                  Mickley-Doyle
+                </div>
+                <div className="mt-2">
+                  <span className="text-[#d4af37]">ROLE:</span> Managing the
+                  data team at StackBlitz
+                </div>
+                <div className="mt-2">
+                  <span className="text-[#d4af37]">STATUS:</span> Online -
+                  Available for opportunities
+                </div>
               </div>
-              <div className="mt-2">
-                <span className="text-[#d4af37]">STATUS:</span> Online -
-                Available for opportunities
-              </div>
+            </div>
+            <div className="text-[#7db46c] mt-4 text-sm sm:text-base">
+              thomas@portfolio:~$ cat README.md
+            </div>
+            <div className="text-[#7db46c] mt-2 leading-relaxed text-sm sm:text-base">
+              Hi, I&apos;m Thomas. I took the long way into tech: Navy Seabee,
+              then classroom teacher in New Orleans, then data scientist, and
+              eventually building and leading data teams at GitHub, Vercel, and
+              now StackBlitz. These days I spend my evenings training small
+              language models and building tools for coding agents. When I&apos;m
+              off the keyboard, I&apos;m usually in the garden or halfway
+              through a home project.
             </div>
             <div className="text-[#7db46c] mt-4 text-sm sm:text-base">
               thomas@portfolio:~$ ls -la connections/
@@ -233,61 +261,91 @@ export function Portfolio() {
             </div>
             <div className="text-[#d4af37]">/home/thomas/location</div>
             <div className="text-[#7db46c] mt-1">
-              Ithaca, New York, USA - Remote
+              Ithaca, New York, USA - working remotely
             </div>
           </div>
 
           {/* Experience */}
           <div className="mb-6">
             <div className="text-[#7db46c] text-sm sm:text-base">
-              thomas@portfolio:~$ cat work/experience.txt
+              thomas@portfolio:~$ cat life/journey.txt
             </div>
             <div className="mt-2 pl-2 sm:pl-4 border-l-2 border-[#404040] space-y-4 text-sm sm:text-base">
               <div>
-                <div className="text-[#d4af37]">▶ ML Engineering</div>
+                <div className="text-[#d4af37]">▶ Now: StackBlitz</div>
                 <div className="text-[#7db46c] mt-2 leading-relaxed">
-                  Building fine-tuned language models to enhance user experience
-                  through patterned responses without overwhelming them with
-                  text. Focused on fine-tuning models for SQL onboarding to
-                  empower co-workers in data exploration. Creating intelligent
-                  solutions that streamline learning processes and improve data
-                  accessibility across teams with a variety of ML applications.
+                  I manage the data team at StackBlitz. My job is making sure
+                  the people around me can get honest answers out of our data
+                  without needing to be data experts themselves, and helping my
+                  team do the best work of their careers.
                 </div>
               </div>
               <div className="text-[#404040]">--------------------</div>
               <div>
-                <div className="text-[#d4af37]">▶ Data Platform Design</div>
+                <div className="text-[#d4af37]">▶ GitHub &amp; Vercel</div>
                 <div className="text-[#7db46c] mt-2 leading-relaxed">
-                  Designing intuitive data solutions that drive product-led
-                  growth by working cross-collaboratively with product,
-                  engineering, and business teams. Focusing on simplifying data
-                  processing, storage, and analytics adoption across teams.
-                  Creating seamless data platforms that enable rapid product
-                  iteration and data-driven decision making.
+                  At GitHub I built metrics, forecasting, and alerting, and
+                  spent a lot of time teaching folks SQL. At Vercel I got to
+                  start the data team from scratch: the first architecture, the
+                  first pipelines, the hiring process, and eventually systems
+                  handling 100M+ events a day. Starting something from zero is
+                  still my favorite kind of work.
                 </div>
               </div>
               <div className="text-[#404040]">--------------------</div>
               <div>
-                <div className="text-[#d4af37]">▶ Data Engineering</div>
+                <div className="text-[#d4af37]">▶ Teaching in New Orleans</div>
                 <div className="text-[#7db46c] mt-2 leading-relaxed">
-                  Architecting and implementing robust data systems, focusing on
-                  scalability and performance. Developing data pipelines,
-                  analytics tools, and machine learning models to drive product
-                  improvements and business insights.
+                  I taught for four years at Lagniappe Academies while earning
+                  my M.S. in Predictive Analytics at Northwestern. Teaching
+                  shaped how I lead: explain it plainly, meet people where they
+                  are, and make sure they leave able to do it without you. From
+                  there I moved into data science at Lucid.
                 </div>
               </div>
               <div className="text-[#404040]">--------------------</div>
               <div>
-                <div className="text-[#d4af37]">
-                  ▶ Data Science and Analytics
-                </div>
+                <div className="text-[#d4af37]">▶ US Navy Seabees</div>
                 <div className="text-[#7db46c] mt-2 leading-relaxed">
-                  Applying advanced statistical methods and machine learning
-                  techniques to solve complex business problems. Translating
-                  data insights into actionable strategies, enhancing product
-                  features and user experiences.
+                  I started out in the Navy as a Seabee out of Gulfport,
+                  Mississippi, working construction and managing projects. It
+                  taught me to plan carefully, build things that hold up, and
+                  look after the crew. I&apos;m a disabled veteran, and I still
+                  carry those lessons into every team I&apos;m on.
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* Side projects */}
+          <div className="mb-6">
+            <div className="text-[#7db46c] text-sm sm:text-base">
+              thomas@portfolio:~$ ls ~/tinkering/
+            </div>
+            <div className="text-[#7db46c] mt-2 leading-relaxed text-sm sm:text-base">
+              What I&apos;ve been building lately, mostly late at night on
+              my own hardware:
+            </div>
+            <div className="mt-2 space-y-1 text-sm sm:text-base">
+              {[
+                ["tiny-research", "95 five-minute training runs on one GPU; the winner is a 34M-param model that autocompletes in your browser"],
+                ["agentic-coding-rl", "an RL environment for training agentic coding models, one rung at a time"],
+                ["zidane-agent-flow", "watch a coding agent think, live, as a tree, timeline, and graph"],
+                ["is-agent-running", "a little Swift app to tell me whether my agents are still working"],
+                ["fill-in-the-middle", "fine-tuning Qwen3-8B for code completion"],
+                ["shallow-explore", "quickly explore a CSV from the command line"],
+                ["moonwalk", "walk the working directory up toward the root"],
+              ].map(([name, desc]) => (
+                <div key={name}>
+                  <Link
+                    href={`https://github.com/tmickleydoyle/${name}`}
+                    className="text-[#87ceeb] hover:text-[#d4af37] transition-colors"
+                  >
+                    {name}/
+                  </Link>
+                  <span className="text-[#9aa0a6]"> - {desc}</span>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -298,24 +356,23 @@ export function Portfolio() {
             </div>
             <div className="mt-2 pl-2 sm:pl-4 border-l-2 border-[#404040] space-y-4 text-sm sm:text-base">
               <div>
-                <div className="text-[#d4af37]">▶ Community Gardener</div>
+                <div className="text-[#d4af37]">▶ Community Gardening</div>
                 <div className="text-[#7db46c] mt-2 leading-relaxed">
-                  Passionate about sustainable urban agriculture and mutual aid.
-                  Maintaining community gardens, organizing volunteer programs,
-                  and sharing skills with local residents about regenerative
-                  gardening practices. Contributing to food security initiatives
-                  and environmental conservation efforts.
+                  I care a lot about sustainable urban agriculture and mutual
+                  aid. I help keep community gardens going, organize
+                  volunteers, and swap what I know about regenerative gardening
+                  with my neighbors. Growing food together is one of the best
+                  ways I know to build a community.
                 </div>
               </div>
               <div className="text-[#404040]">--------------------</div>
               <div>
-                <div className="text-[#d4af37]">▶ Construction</div>
+                <div className="text-[#d4af37]">▶ Building Things</div>
                 <div className="text-[#7db46c] mt-2 leading-relaxed">
-                  My time in the Navy working construction sparked a lasting
-                  passion for hands-on work. Today, I find immense joy in DIY
-                  projects, home improvements, and helping friends with their
-                  renovations. Working with my hands has become an essential
-                  part of who I am.
+                  The Seabees gave me a love of hands-on work that never left.
+                  I&apos;m happiest with a DIY project going, fixing up the
+                  house, or helping friends with their renovations. Working with
+                  my hands is as much a part of me as writing code.
                 </div>
               </div>
             </div>
@@ -366,7 +423,7 @@ export function Portfolio() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Ask about Thomas's experience..."
+              placeholder="Ask me anything about my work or life..."
               className="flex-1 bg-transparent text-[#9aa0a6] font-mono text-sm sm:text-base outline-none placeholder:text-[#5a5a5a] min-w-0 caret-[#7db46c]"
               disabled={isLoading}
             />
